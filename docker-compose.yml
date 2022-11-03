@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  webapidemo:
+    image: ${DOCKER_REGISTRY-}webapidemo
+    build:
+      context: .
+      dockerfile: WebApiDemo\Dockerfile
+  loggerapidemo:
+    image: ${DOCKER_REGISTRY-}loggerapidemo
+    build:
+      context: .
+      dockerfile: LoggerApiDemo\Dockerfile
