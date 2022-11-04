@@ -9,9 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDemo", "WebApiDemo\We
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1C6A550C-992E-455C-9866-AF3323109BAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerApiDemo", "LoggerApiDemo\LoggerApiDemo.csproj", "{1667F95C-9793-467C-AD37-E56C0AFB251D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngularSpaWebApi", "AngularSpaWebApi\AngularSpaWebApi.csproj", "{999D4736-84E3-4F75-8DA2-9A6F64A2BDAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerApiDemo", "LoggerApiDemo\LoggerApiDemo.csproj", "{1667F95C-9793-467C-AD37-E56C0AFB251D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +35,6 @@ Global
 		{1667F95C-9793-467C-AD37-E56C0AFB251D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1667F95C-9793-467C-AD37-E56C0AFB251D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1667F95C-9793-467C-AD37-E56C0AFB251D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{999D4736-84E3-4F75-8DA2-9A6F64A2BDAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{999D4736-84E3-4F75-8DA2-9A6F64A2BDAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{999D4736-84E3-4F75-8DA2-9A6F64A2BDAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{999D4736-84E3-4F75-8DA2-9A6F64A2BDAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
