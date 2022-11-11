@@ -37,38 +37,57 @@ namespace LoggerApiDemo.Services
             try
             {
                 if (Startup.LogDataSinkList.Contains("File"))
-                {
-                    if (logType == "Debug")
-                        logger.Debug(message);
-                    else if (logType == "Error")
-                        logger.Error(message);
-                    else if (logType == "Info")
-                        logger.Info(message);
-                    else if (logType == "Warning")
-                        logger.Warn(message);
-                }
+                    SaveToLogFile(message, logType);
                 else if (Startup.LogDataSinkList.Contains("CosmosDb"))
-                {
-                    Database cosDb = Startup.cosClient.GetDatabase("alvaz-poc-logdb");
-                    Container container = cosDb.GetContainer("OnpremLogs");
-                    var logMsg = new LoggerEntry()
-                    {
-                        CreateDate = new System.DateTime(),
-                        Type = logType,
-                        Class = message.Split('|')[0].Split(':')[1],
-                        Description = message.Split('|')[1].Split(':')[1]
-                    };
-                    LoggerEntry createdItem = await container.CreateItemAsync<LoggerEntry>(
-                        item: logMsg
-                    );
+                    await SaveToCosmosDb(message, logType);
+                else if (Startup.LogDataSinkList.Contains("AzureMonitor"))
+                    await SaveToAzureMonitor(message, logType);
 
-                }
                 return new Tuple<bool,string>(true,string.Empty);
             }
             catch(Exception ex)
             {
                 return new Tuple<bool, string>(true, ex.Message);
             }
+        }
+
+        private async Task<bool> SaveToCosmosDb(string message, string logType)
+        {
+            Database cosDb = Startup.cosClient.GetDatabase("alvaz-poc-logdb");
+            Container container = cosDb.GetContainer("OnpremLogs");
+            var logMsg = new LoggerEntry()
+            {
+                CreateDate = new System.DateTime(),
+                Type = logType,
+                Class = message.Split('|')[0].Split(':')[1],
+                Description = message.Split('|')[1].Split(':')[1]
+            };
+            LoggerEntry createdItem = await container.CreateItemAsync<LoggerEntry>(
+                item: logMsg
+            );
+            if (createdItem != null)
+                return true;
+            else
+                return false;
+        }
+
+        private async Task<bool> SaveToAzureMonitor(string message, string logType)
+        {
+            // TODO
+            return true;
+        }
+
+        private bool SaveToLogFile(string message, string logType)
+        {
+            if (logType == "Debug")
+                logger.Debug(message);
+            else if (logType == "Error")
+                logger.Error(message);
+            else if (logType == "Info")
+                logger.Info(message);
+            else if (logType == "Warning")
+                logger.Warn(message);
+            return true;
         }
     }
 
