@@ -2,7 +2,8 @@
 using System;
 using System.Drawing;
 using System.Security;
-using WebApiDemo.Utilities;
+using WebApiDemo.Controllers;
+using WebApiDemo.Services;
 
 namespace WebApiDemo
 {
@@ -13,6 +14,7 @@ namespace WebApiDemo
         private string _class;
         private string _message;
         private string _description;
+        private string _status;
         private dynamic _serialized = null;
         public string Code 
         {
@@ -44,17 +46,24 @@ namespace WebApiDemo
             get { return _message; }
             set { _message = value; }
         }
+        public string Status
+        {
+            get { return _status; }
+            set { _status = value; }
+        }
 
         public void Generate(int wordcount = 0)
         {
+            Random res = new Random();
             if (wordcount == 0)
             {
                 // generate a random # words between 5 and 15
-                Random res = new Random();
                 wordcount = res.Next(5, 15);
             }
-            _message = string.Join(' ', ServiceUtilities.GenerateSyntheticMessage(wordcount));
-            _serialized = $"CLASS:{_class}|DESCRIPTION:{_description}|MESSAGE:{_message}";
+            _message = string.Join(' ', ExceptionServices.GenerateSyntheticMessage(wordcount));
+            var statusList = ExceptionUtilitiesController.HttpResponseStatusList;
+            _status = statusList[res.Next(0, statusList.Count-1)];
+            _serialized = $"CLASS:{_class}|DESCRIPTION:{_description}|MESSAGE:{_message}|STATUS:{_status}";
             return;
         }
     }
