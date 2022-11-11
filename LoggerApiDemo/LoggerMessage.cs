@@ -1,4 +1,6 @@
-﻿namespace LoggerApiDemo
+﻿using System;
+
+namespace LoggerApiDemo
 {
     public class LoggerMessage
     {
