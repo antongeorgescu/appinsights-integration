@@ -29,8 +29,8 @@ namespace LoggerApiDemo
 
             // New instance of CosmosClient class
             cosClient = new(
-                accountEndpoint: configuration.GetSection("AzureCosmosDb:URI").GetChildren().Select(x => x.Value).ToList()[0],
-                authKeyOrResourceToken: configuration.GetSection("AzureCosmosDb:PrimaryKey").GetChildren().Select(x => x.Value).ToList()[0]
+                accountEndpoint: configuration.GetSection("AzureCosmosDb:URI").Value,
+                authKeyOrResourceToken: configuration.GetSection("AzureCosmosDb:PrimaryKey").Value
             );
 
             // get the data sinks active (are 'ON') 

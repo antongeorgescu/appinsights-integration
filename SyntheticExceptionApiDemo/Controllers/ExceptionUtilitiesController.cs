@@ -8,6 +8,14 @@ using System.Security.Cryptography.Xml;
 using Microsoft.Extensions.Configuration;
 using WebApiDemo.Services;
 using System.Drawing;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.IO;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Net.Http.Json;
+using System.Net;
+using SyntheticExceptionApiDemo;
 
 namespace WebApiDemo.Controllers
 {
@@ -18,6 +26,7 @@ namespace WebApiDemo.Controllers
         private readonly IConfiguration _configuration;
         static internal List<string> HttpResponseStatusList;
         static internal List<Tuple<string, string, string>> CodeClassDescriptionList;
+        static internal string _loggerURI;
 
         public ExceptionUtilitiesController(IConfiguration configuration)
         {
@@ -38,6 +47,8 @@ namespace WebApiDemo.Controllers
             CodeClassDescriptionList = new List<Tuple<string, string, string>>();
             CodeClassDescriptionList.AddRange(netCodeClassList);
             CodeClassDescriptionList.AddRange(ngCodeClassList);
+
+            _loggerURI = _configuration.GetSection($"LoggerApiUrl").Value;
         }
 
         [HttpGet]
@@ -99,17 +110,66 @@ namespace WebApiDemo.Controllers
         }
 
         [HttpGet("exceptionlist/{count}/{framework}")]
-        public ActionResult<IEnumerable<ThrowErrorRequest>> GetRandomFrameworkExceptions(int count,string framework)
+        public async Task<HttpResponseMessage> GetRandomFrameworkExceptions(int count,string framework)
         {
             var exceptions = ExceptionServices.GenerateRandomErrorList(count,framework);
-            return Ok(exceptions);
+
+            // call Logger service to log exceptions
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/text"));
+            client.DefaultRequestHeaders.Add("User-Agent","Synthetic Exception Generator");
+
+            foreach (ThrowErrorRequest ex in exceptions)
+            {
+                var content = JsonContent.Create(new LoggerEntry(){ 
+                    Class = ex.Class,
+                    Description = ex.Description,
+                    Type = ex.Code,
+                    CreateDate = DateTime.Now
+                });
+
+                using HttpResponseMessage response = await client.PostAsync($"{_loggerURI}/log/error",content);
+                if (!response.StatusCode.Equals(HttpStatusCode.OK))
+                    return response;
+            }
+
+            var okResponse = new HttpResponseMessage();
+            okResponse.Content = JsonContent.Create("All exceptions have been processed");
+            return okResponse;
         }
 
         [HttpGet("exceptionlist/{count}")]
-        public ActionResult<IEnumerable<ThrowErrorRequest>> GetRandomExceptions(int count)
+        public async Task<HttpResponseMessage> GetRandomExceptions(int count)
         {
             var exceptions = ExceptionServices.GenerateRandomErrorList(count);
-            return Ok(exceptions);
+
+            // call Logger service to log exceptions
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/text"));
+            client.DefaultRequestHeaders.Add("User-Agent", "Synthetic Exception Generator");
+
+            foreach (ThrowErrorRequest ex in exceptions)
+            {
+                var content = JsonContent.Create(new LoggerEntry()
+                {
+                    Class = ex.Class,
+                    Description = ex.Description,
+                    Type = ex.Code,
+                    CreateDate = DateTime.Now
+                });
+
+                using HttpResponseMessage response = await client.PostAsync($"{_loggerURI}/log/error", content);
+                if (!response.StatusCode.Equals(HttpStatusCode.OK))
+                    return response;
+            }
+
+            var okResponse = new HttpResponseMessage();
+            okResponse.Content = JsonContent.Create("All exceptions have been processed");
+            return okResponse;
         }
     }
 }

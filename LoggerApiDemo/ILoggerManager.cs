@@ -1,10 +1,13 @@
-﻿namespace LoggerApiDemo.Services
+﻿using System;
+using System.Threading.Tasks;
+
+namespace LoggerApiDemo.Services
 {
     public interface ILoggerManager
     {
-        void LogInfo(string message);
-        void LogWarn(string message);
-        void LogDebug(string message);
-        void LogError(string message);
+        Task<Tuple<bool,string>> LogInfo(string message);
+        Task<Tuple<bool,string>> LogWarn(string message);
+        Task<Tuple<bool,string>> LogDebug(string message);
+        Task<Tuple<bool,string>> LogError(string message);
     }
 }

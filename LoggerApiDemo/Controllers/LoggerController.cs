@@ -34,7 +34,7 @@ namespace LoggerApiDemo.Controllers
         }
 
         [HttpPost("log/info")]
-        public IActionResult PostInfo([FromForm] LoggerMessage message)
+        public IActionResult PostInfo([FromBody] LoggerEntry message)
         {
             if (string.IsNullOrEmpty(message.Description))
                 return BadRequest();
@@ -44,7 +44,7 @@ namespace LoggerApiDemo.Controllers
         }
 
         [HttpPost("log/debug")]
-        public IActionResult PostDebug([FromForm] LoggerMessage message)
+        public IActionResult PostDebug([FromBody] LoggerEntry message)
         {
             if (string.IsNullOrEmpty(message.Description))
                 return BadRequest();
@@ -54,7 +54,7 @@ namespace LoggerApiDemo.Controllers
         }
 
         [HttpPost("log/warn")]
-        public IActionResult PostWarn([FromForm] LoggerMessage message)
+        public IActionResult PostWarn([FromBody] LoggerEntry message)
         {
             if (string.IsNullOrEmpty(message.Description))
                 return BadRequest();
@@ -64,7 +64,7 @@ namespace LoggerApiDemo.Controllers
         }
 
         [HttpPost("log/error")]
-        public IActionResult PostError([FromForm] LoggerMessage message)
+        public IActionResult PostError([FromBody] LoggerEntry message)
         {
             if (string.IsNullOrEmpty(message.Description))
                 return BadRequest();
