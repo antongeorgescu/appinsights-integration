@@ -1,0 +1,15 @@
+[
+  {
+    "type": "Proof of Concept",
+    "title": ".NET Logger integration with APM",
+    "description": ".NET Nlog Logger integration with Application Performance Monitoring (APM)",
+    "notes": "Scope confined to Azure Monitor, Cosmos Db, and App Dynamics"
+  },
+  {
+    "type": "Hackathon Submission",
+    "title": "Resume Document Automatic Parser (RAP)",
+    "description": "Machine Learning powered Python service that parses a resume for high correlation with desired skills.",
+    "notes": "Based on Python REST API"
+  }
+]
+

@@ -7,11 +7,6 @@ export interface ApplicationInfo {
   description: string;
   notes: string;
 }
-const ELEMENT_DATA: ApplicationInfo[] = [
-  { type: "poc", title: 'Hydrogen', description: "jhsgdhsg", notes: 'H' },
-  { type: "poc", title: 'Hydrogen', description: "jhsgdhsg", notes: 'H' },
-  { type: "poc", title: 'Hydrogen', description: "jhsgdhsg", notes: 'H' }
-];
 
 @Component({
   selector: 'app-home',
@@ -19,20 +14,15 @@ const ELEMENT_DATA: ApplicationInfo[] = [
 })
 export class HomeComponent {
   displayedColumns: string[] = ['type', 'title', 'description', 'notes'];
-  dataSource = ELEMENT_DATA;
+  dataSource: ApplicationInfo[] = [];
 
-  //public applications: ApplicationInfo[] = [];
+  public applications: ApplicationInfo[] = [];
 
-  //constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-  //  http.get<ApplicationInfo[]>(baseUrl + 'portalinformation').subscribe(result => {
-  //    this.applications = result;
-  //  }, error => console.error(error));
-  //}
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    http.get<ApplicationInfo[]>(baseUrl + 'portalutilities/applications').subscribe(result => {
+      this.dataSource = result;
+    }, error => console.error(error));
+  }
 }
 
-//interface ApplicationInfo {
-//  type: string;
-//  title: number;
-//  description: number;
-//  notes: string;
-//}
+

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,24 +10,25 @@ namespace AngularSpaWebApi.Controllers
     public class PortalUtilitiesController : ControllerBase
     {
         // GET: api/<PortalUtilitiesController>
-        [HttpGet]
+        [HttpGet("applications")]
         public IEnumerable<ApplicationInfo> Get()
         {
             var apps = new List<ApplicationInfo>();
-            apps.Add(new ApplicationInfo()
+
+            using (StreamReader r = new StreamReader("Data/works.json"))
             {
-                Type = "POC",
-                Title = ".NET Logger integration with APM",
-                Description = ".NET Nlog Logger integration with Application Performance Monitoring (APM)",
-                Notes = "Scope confined to Azure Monitor, Cosmos Db, and App Dynamics"
-            });
-            apps.Add(new ApplicationInfo()
-            {
-                Type = "Hackathon Submission",
-                Title = "Resume Automatic Parser (RAP)",
-                Description = "Machine Learning powered Python service that parses a resume for high correlation with desired skills.",
-                Notes = ""
-            });
+                string json = r.ReadToEnd();
+                List<ApplicationInfo> works = JsonConvert.DeserializeObject<List<ApplicationInfo>>(json);
+                foreach (var work in works)
+                    apps.Add(new ApplicationInfo()
+                    {
+                        Type = work.Type,
+                        Title = work.Title,
+                        Description = work.Description,
+                        Notes = work.Notes
+                    });
+
+            }
             return apps;
         }
 
