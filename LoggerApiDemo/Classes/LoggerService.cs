@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using LoggerApiDemo.Interfaces;
+using Microsoft.Azure.Cosmos;
 using NLog;
 using System;
 using System.ComponentModel;
@@ -7,12 +8,13 @@ using System.Security.Policy;
 using System.Threading.Tasks;
 using Container = Microsoft.Azure.Cosmos.Container;
 
-namespace LoggerApiDemo.Services
+namespace LoggerApiDemo.Classes
 {
-    public class LoggerManager : ILoggerManager
+    public class LoggerService : ILoggerService
     {
         private static ILogger logger = LogManager.GetCurrentClassLogger();
-        public async Task<Tuple<bool,string>> LogDebug(string message) {
+        public async Task<Tuple<bool, string>> LogDebug(string message)
+        {
             var response = await SaveLogEntry(message, "Debug");
             return response;
         }
@@ -32,7 +34,7 @@ namespace LoggerApiDemo.Services
             return response;
         }
 
-        private async Task<Tuple<bool,string>> SaveLogEntry(string message, string logType)
+        private async Task<Tuple<bool, string>> SaveLogEntry(string message, string logType)
         {
             try
             {
@@ -43,9 +45,9 @@ namespace LoggerApiDemo.Services
                 else if (Startup.LogDataSinkList.Contains("AzureMonitor"))
                     await SaveToAzureMonitor(message, logType);
 
-                return new Tuple<bool,string>(true,string.Empty);
+                return new Tuple<bool, string>(true, string.Empty);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new Tuple<bool, string>(true, ex.Message);
             }
@@ -57,12 +59,12 @@ namespace LoggerApiDemo.Services
             Container container = cosDb.GetContainer("OnpremLogs");
             var logMsg = new LoggerEntry()
             {
-                CreateDate = new System.DateTime(),
+                CreateDate = new DateTime(),
                 Type = logType,
                 Class = message.Split('|')[0].Split(':')[1],
                 Description = message.Split('|')[1].Split(':')[1]
             };
-            LoggerEntry createdItem = await container.CreateItemAsync<LoggerEntry>(
+            LoggerEntry createdItem = await container.CreateItemAsync(
                 item: logMsg
             );
             if (createdItem != null)

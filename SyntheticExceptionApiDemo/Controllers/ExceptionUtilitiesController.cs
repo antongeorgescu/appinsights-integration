@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Net;
 using SyntheticExceptionApiDemo;
+using SyntheticExceptionApiDemo.Classes;
 
 namespace WebApiDemo.Controllers
 {

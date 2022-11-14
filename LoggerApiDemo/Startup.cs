@@ -11,8 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LoggerApiDemo.Services;
 using Microsoft.Azure.Cosmos;
+using LoggerApiDemo.Utilities;
 
 namespace LoggerApiDemo
 {

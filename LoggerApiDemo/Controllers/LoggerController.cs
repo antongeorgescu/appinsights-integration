@@ -1,5 +1,4 @@
-﻿using LoggerApiDemo.Services;
-using LoggerApiDemo.Utilities;
+﻿using LoggerApiDemo.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft;
 using Newtonsoft.Json.Linq;
+using LoggerApiDemo.Interfaces;
+using LoggerApiDemo.Classes;
+using NLog.Targets;
+using NLog;
+using NLog.Fluent;
 
 namespace LoggerApiDemo.Controllers
 {
@@ -20,9 +24,9 @@ namespace LoggerApiDemo.Controllers
     [Route("[controller]")]
     public class LoggerController : ControllerBase
     {
-        private readonly ILoggerManager _logger;
+        private readonly ILoggerService _logger;
                 
-        public LoggerController(ILoggerManager logger)
+        public LoggerController(ILoggerService logger)
         {
             _logger = logger;
         }
@@ -34,42 +38,43 @@ namespace LoggerApiDemo.Controllers
         }
 
         [HttpPost("log/info")]
-        public IActionResult PostInfo([FromBody] LoggerEntry message)
+        public async Task<IActionResult> PostInfo([FromBody] LoggerEntry entry)
         {
-            if (string.IsNullOrEmpty(message.Description))
+            if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogInfo($"|CLASS:{message.Class}|DESCRIPTION:{message.Description}");
+            await _logger.LogInfo($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
+
             return Ok($"INFO log saved on {DateTime.Now}");
         }
 
         [HttpPost("log/debug")]
-        public IActionResult PostDebug([FromBody] LoggerEntry message)
+        public IActionResult PostDebug([FromBody] LoggerEntry entry)
         {
-            if (string.IsNullOrEmpty(message.Description))
+            if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogDebug($"|CLASS:{message.Class}|DESCRIPTION:{message.Description}");
+            _logger.LogDebug($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
             return Ok($"DEBUG log saved on {DateTime.Now}");
         }
 
         [HttpPost("log/warn")]
-        public IActionResult PostWarn([FromBody] LoggerEntry message)
+        public IActionResult PostWarn([FromBody] LoggerEntry entry)
         {
-            if (string.IsNullOrEmpty(message.Description))
+            if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogWarn($"|CLASS:{message.Class}|DESCRIPTION:{message.Description}");
+            _logger.LogWarn($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
             return Ok($"WARN log saved on {DateTime.Now}");
         }
 
         [HttpPost("log/error")]
-        public IActionResult PostError([FromBody] LoggerEntry message)
+        public IActionResult PostError([FromBody] LoggerEntry entry)
         {
-            if (string.IsNullOrEmpty(message.Description))
+            if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogError($"|CLASS:{message.Class}|DESCRIPTION:{message.Description}");
+            _logger.LogError($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
             return Ok($"ERROR log saved on {DateTime.Now}");
         }
 
