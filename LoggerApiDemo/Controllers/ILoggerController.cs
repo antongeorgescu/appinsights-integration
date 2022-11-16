@@ -1,32 +1,24 @@
-﻿using LoggerApiDemo.Utilities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting.Server;
+﻿using LoggerApiDemo.Classes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using System.Xml;
-using Newtonsoft;
-using Newtonsoft.Json.Linq;
-using LoggerApiDemo.Interfaces;
-using LoggerApiDemo.Classes;
-using NLog.Targets;
-using NLog;
-using NLog.Fluent;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace LoggerApiDemo.Controllers
 {
-    [ApiController]
     [Route("[controller]")]
-    public class LoggerController : ControllerBase
+    [ApiController]
+    public class ILoggerController : ControllerBase
     {
-        private readonly ILoggerService _logger;
-                
-        public LoggerController(ILoggerService logger)
+        protected readonly ILogger<ILoggerController> _logger;
+
+        public ILoggerController([NotNull] ILogger<ILoggerController> logger)
         {
             _logger = logger;
         }
@@ -34,7 +26,7 @@ namespace LoggerApiDemo.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok($"Logger service started at {DateTime.Now}");
+            return Ok($"ILogger controller instance created at {DateTime.Now}");
         }
 
         [HttpPost("log/info")]
@@ -43,7 +35,7 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            await _logger.LogInfo($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
+            _logger.LogInformation($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
 
             return Ok($"INFO log saved on {DateTime.Now}");
         }
@@ -54,7 +46,7 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogDebug($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
+            _logger.LogDebug($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
             return Ok($"DEBUG log saved on {DateTime.Now}");
         }
 
@@ -64,7 +56,7 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogWarn($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
+            _logger.LogWarning($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
             return Ok($"WARN log saved on {DateTime.Now}");
         }
 
@@ -74,8 +66,28 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogError($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}");
+            _logger.LogError($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
             return Ok($"ERROR log saved on {DateTime.Now}");
+        }
+
+        [HttpPost("log/trace")]
+        public IActionResult PostTrace([FromBody] LoggerEntry entry)
+        {
+            if (string.IsNullOrEmpty(entry.Message))
+                return BadRequest();
+
+            _logger.LogTrace($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            return Ok($"TRACE log saved on {DateTime.Now}");
+        }
+
+        [HttpPost("log/critical")]
+        public IActionResult PostCritical([FromBody] LoggerEntry entry)
+        {
+            if (string.IsNullOrEmpty(entry.Message))
+                return BadRequest();
+
+            _logger.LogTrace($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            return Ok($"CRITICAL log saved on {DateTime.Now}");
         }
 
         [HttpGet("logs/{logtype}")]

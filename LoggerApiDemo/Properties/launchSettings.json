@@ -3,7 +3,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "logger",
+      "launchUrl": "ilogger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -11,7 +11,7 @@
     "LoggerApiDemo": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "logger",
+      "launchUrl": "ilogger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -20,7 +20,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/logger",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/ilogger",
       "publishAllPorts": true
     }
   },

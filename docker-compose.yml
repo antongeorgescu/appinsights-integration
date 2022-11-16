@@ -1,13 +1,19 @@
 version: '3.4'
 
 services:
-  webapidemo:
-    image: ${DOCKER_REGISTRY-}webapidemo
+  syntheticlogapidemo:
+    image: ${DOCKER_REGISTRY-}syntheticlogapidemo
     build:
       context: .
-      dockerfile: WebApiDemo\Dockerfile
+      dockerfile: SyntheticLogApiDemo\Dockerfile
   loggerapidemo:
     image: ${DOCKER_REGISTRY-}loggerapidemo
     build:
       context: .
       dockerfile: LoggerApiDemo\Dockerfile
+  architectworksportal:
+    image: ${DOCKER_REGISTRY-}architectworksportal
+    build:
+      context: .
+      dockerfile: ArchitectWorksPortal/Dockerfile
+
