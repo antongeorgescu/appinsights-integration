@@ -13,10 +13,10 @@ using System.Xml;
 using Newtonsoft;
 using Newtonsoft.Json.Linq;
 using LoggerApiDemo.Interfaces;
-using LoggerApiDemo.Classes;
 using NLog.Targets;
 using NLog;
 using NLog.Fluent;
+using LoggerApiDemo.LoggerClasses;
 
 namespace LoggerApiDemo.Controllers
 {

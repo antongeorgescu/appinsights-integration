@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 using LoggerApiDemo.ILoggerClasses.ColorConsole;
 using LoggerApiDemo.ILoggerClasses.LogFiles;
+using LoggerApiDemo.ILoggerClasses.AppInsights;
 using System.Configuration;
 
 namespace LoggerApiDemo
@@ -47,6 +48,11 @@ namespace LoggerApiDemo
                         configuration.FilePath = hostBuilderContext.Configuration.GetSection($"Logging:ILoggerFileTarget:Options:FilePath").Value;
                         // Replace warning value from appsettings.json of "Red"
                         configuration.FolderPath = hostBuilderContext.Configuration.GetSection($"Logging:ILoggerFileTarget:Options:FolderPath").Value;
+                    });
+                    logbuilder.AddAppInsightsLogger(configuration =>
+                    {
+                        // read connection string for AppInsights
+                        configuration.ConnectionString = hostBuilderContext.Configuration.GetSection($"Logging:ApplicationInsights:Options:ConnectionString").Value;
                     });
                 });
             return hostBuilder;

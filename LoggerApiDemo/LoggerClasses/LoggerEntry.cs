@@ -4,7 +4,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.LoggerClasses
 {
     public class LoggerEntry : ILoggerEntry
     {
@@ -27,7 +27,7 @@ namespace LoggerApiDemo.Classes
         public DateTime CreateDate { get; set; }
         public string Type { get; set; }
         public string Class { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; }
         public string Message { get; set; }
         public string HashKey
         {

@@ -1,5 +1,6 @@
-﻿using LoggerApiDemo.Classes;
+﻿using LoggerApiDemo.LoggerClasses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,9 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogInformation($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            _logger.LogInformation(eventId: new EventId(0, entry.HashKey),
+                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                "POST");
 
             return Ok($"INFO log saved on {DateTime.Now}");
         }
@@ -46,7 +49,9 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogDebug($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            _logger.LogDebug(eventId: new EventId(0, entry.HashKey),
+                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                "POST");
             return Ok($"DEBUG log saved on {DateTime.Now}");
         }
 
@@ -56,7 +61,9 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogWarning($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            _logger.LogWarning(eventId: new EventId(0, entry.HashKey),
+                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                "POST");
             return Ok($"WARN log saved on {DateTime.Now}");
         }
 
@@ -66,7 +73,10 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogError($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            _logger.LogError(eventId: new EventId(0, entry.HashKey),
+                                exception: new Exception($"*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
+                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                "POST");
             return Ok($"ERROR log saved on {DateTime.Now}");
         }
 
@@ -76,7 +86,9 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogTrace($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            _logger.LogTrace(eventId: new EventId(0, entry.HashKey),
+                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                "POST");
             return Ok($"TRACE log saved on {DateTime.Now}");
         }
 
@@ -86,7 +98,10 @@ namespace LoggerApiDemo.Controllers
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
 
-            _logger.LogTrace($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST");
+            _logger.LogCritical($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST"); _logger.LogInformation(eventId: new EventId(0, entry.HashKey),
+                                exception: new Exception($"*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
+                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                "POST");
             return Ok($"CRITICAL log saved on {DateTime.Now}");
         }
 

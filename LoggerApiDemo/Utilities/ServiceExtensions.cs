@@ -1,5 +1,5 @@
-﻿using LoggerApiDemo.Classes;
-using LoggerApiDemo.Interfaces;
+﻿using LoggerApiDemo.Interfaces;
+using LoggerApiDemo.LoggerClasses;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LoggerApiDemo.Utilities

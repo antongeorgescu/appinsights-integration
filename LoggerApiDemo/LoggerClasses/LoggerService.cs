@@ -8,7 +8,7 @@ using System.Security.Policy;
 using System.Threading.Tasks;
 using Container = Microsoft.Azure.Cosmos.Container;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.LoggerClasses
 {
     public class LoggerService : ILoggerService
     {
