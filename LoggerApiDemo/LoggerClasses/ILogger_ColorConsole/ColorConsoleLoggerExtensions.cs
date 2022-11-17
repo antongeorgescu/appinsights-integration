@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using System;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.ILoggerClasses.ColorConsole
 {
     public static class ColorConsoleLoggerExtensions
     {

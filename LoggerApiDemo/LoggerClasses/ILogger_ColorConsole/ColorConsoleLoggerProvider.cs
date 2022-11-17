@@ -4,13 +4,13 @@ using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.ILoggerClasses.ColorConsole
 {
     [UnsupportedOSPlatform("browser")]
     [ProviderAlias("ColorConsole")]
     public sealed class ColorConsoleLoggerProvider : ILoggerProvider
     {
-        private readonly IDisposable? _onChangeToken;
+        private readonly IDisposable _onChangeToken;
         private ColorConsoleLoggerConfiguration _currentConfig;
         private readonly ConcurrentDictionary<string, ColorConsoleLogger> _loggers =
             new(StringComparer.OrdinalIgnoreCase);

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.ILoggerClasses.LogFiles
 {
     public class ILoggerFileLogger : ILogger
     {

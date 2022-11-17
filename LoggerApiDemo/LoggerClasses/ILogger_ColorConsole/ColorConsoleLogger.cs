@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.ILoggerClasses.ColorConsole
 {
     public sealed class ColorConsoleLogger : ILogger
     {
@@ -13,7 +13,7 @@ namespace LoggerApiDemo.Classes
             Func<ColorConsoleLoggerConfiguration> getCurrentConfig) =>
             (_name, _getCurrentConfig) = (name, getCurrentConfig);
 
-        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull => default!;
 
         public bool IsEnabled(LogLevel logLevel) =>
             _getCurrentConfig().LogLevelToColorMap.ContainsKey(logLevel);
@@ -22,8 +22,8 @@ namespace LoggerApiDemo.Classes
             LogLevel logLevel,
             EventId eventId,
             TState state,
-            Exception? exception,
-            Func<TState, Exception?, string> formatter)
+            Exception exception,
+            Func<TState, Exception, string> formatter)
         {
             if (!IsEnabled(logLevel))
             {

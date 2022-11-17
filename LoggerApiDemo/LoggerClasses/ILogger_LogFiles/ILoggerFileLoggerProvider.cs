@@ -2,14 +2,14 @@
 using Microsoft.Extensions.Options;
 using System.IO;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.ILoggerClasses.LogFiles
 {
     [ProviderAlias("FileILoggerProvider")]
     public class ILoggerFileLoggerProvider : ILoggerProvider
     {
-        public readonly ILoggerFileTarget Options;
+        public readonly ILoggerFileLoggerConfiguration Options;
 
-        public ILoggerFileLoggerProvider(IOptions<ILoggerFileTarget> _options)
+        public ILoggerFileLoggerProvider(IOptions<ILoggerFileLoggerConfiguration> _options)
         {
             Options = _options.Value;
 

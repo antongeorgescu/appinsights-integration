@@ -1,4 +1,3 @@
-using LoggerApiDemo.Classes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+using LoggerApiDemo.ILoggerClasses.ColorConsole;
+using LoggerApiDemo.ILoggerClasses.LogFiles;
+using System.Configuration;
 
 namespace LoggerApiDemo
 {
@@ -28,16 +30,23 @@ namespace LoggerApiDemo
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                .ConfigureLogging(logbuilder =>
+                .ConfigureLogging((hostBuilderContext, logbuilder) =>
                 {
                     logbuilder.ClearProviders();
-                    //logbuilder.AddConsole();
+                    logbuilder.AddConsole();
                     logbuilder.AddColorConsoleLogger(configuration =>
                     {
                         // Replace warning value from appsettings.json of "Cyan"
                         configuration.LogLevelToColorMap[LogLevel.Warning] = ConsoleColor.DarkCyan;
                         // Replace warning value from appsettings.json of "Red"
                         configuration.LogLevelToColorMap[LogLevel.Error] = ConsoleColor.DarkRed;
+                    });
+                    logbuilder.AddFileLogger(configuration =>
+                    {
+                        // Replace warning value from appsettings.json of "Cyan"
+                        configuration.FilePath = hostBuilderContext.Configuration.GetSection($"Logging:ILoggerFileTarget:Options:FilePath").Value;
+                        // Replace warning value from appsettings.json of "Red"
+                        configuration.FolderPath = hostBuilderContext.Configuration.GetSection($"Logging:ILoggerFileTarget:Options:FolderPath").Value;
                     });
                 });
             return hostBuilder;

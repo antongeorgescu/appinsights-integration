@@ -2,7 +2,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace LoggerApiDemo.Classes
+namespace LoggerApiDemo.ILoggerClasses.ColorConsole
 {
     public sealed class ColorConsoleLoggerConfiguration
     {
