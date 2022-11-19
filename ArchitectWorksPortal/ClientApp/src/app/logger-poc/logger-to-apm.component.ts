@@ -15,43 +15,9 @@ export class LoggerToApmComponent {
   public exlist:[] = [];
   public error: string = "";
   public connectionResult = "";
-  public logfiles: string[] = [];
+  public logfiles: FileObject[] = [];
   baseUrl: string = "";
   http: HttpClient;
-
-  //constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-  //  http.get<Exception[]>(baseUrl + 'syntheticlogapi').subscribe(result => {
-  //    this.exceptionlist = result;
-  //  }, error => console.error(error));
-  //}
-
-  doc = [
-    {
-      "key": "NET01",
-      "path": "Exceptions:netcore:NET01",
-      "value": "IndexOutOfRangeException|Thrown by the runtime only when an array is indexed improperly."
-    },
-    {
-      "key": "NET02",
-      "path": "Exceptions:netcore:NET02",
-      "value": "NullReferenceException|Thrown by the runtime only when a null object is referenced."
-    },
-    {
-      "key": "NET03",
-      "path": "Exceptions:netcore:NET03",
-      "value": "InvalidOperationException|Thrown by methods when in an invalid state."
-    },
-    {
-      "key": "NET04",
-      "path": "Exceptions:netcore:NET04",
-      "value": "ArgumentNullException|Thrown by methods that do not allow an argument to be null."
-    },
-    {
-      "key": "NET05",
-      "path": "Exceptions:netcore:NET05",
-      "value": "ArgumentOutOfRangeException|Thrown by methods that verify that arguments are in a given range."
-    }
-  ];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -73,7 +39,7 @@ export class LoggerToApmComponent {
         this.exceptionlist.push(ex)
       }
     }, error => console.error(error));
-    this.http.get<string[]>(this.baseUrl + 'exceptionutilities/logfiles').subscribe(result => {
+    this.http.get<FileObject[]>(this.baseUrl + 'exceptionutilities/logfiles').subscribe(result => {
       console.log(result);
       for (var i = 0; i < result.length; i++) {
         // assign this inner object to a variable for simpler property access
@@ -96,6 +62,11 @@ class Exception {
     this.type = type;
     this.description = description;
   }
+}
+
+interface FileObject {
+  name: string;
+  path: string;
 }
 
 interface Connectivity {

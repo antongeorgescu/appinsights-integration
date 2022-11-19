@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchitectWorksPortal", "Arc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerApiDemo", "LoggerApiDemo\LoggerApiDemo.csproj", "{E07CF6FF-9BD0-4672-B1D1-BD14FA54EC32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllersUnitTests", "ControllersUnitTests\ControllersUnitTests.csproj", "{E73C63CB-0103-4815-B994-A7E985E8411E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E07CF6FF-9BD0-4672-B1D1-BD14FA54EC32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E07CF6FF-9BD0-4672-B1D1-BD14FA54EC32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E07CF6FF-9BD0-4672-B1D1-BD14FA54EC32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E73C63CB-0103-4815-B994-A7E985E8411E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73C63CB-0103-4815-B994-A7E985E8411E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73C63CB-0103-4815-B994-A7E985E8411E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73C63CB-0103-4815-B994-A7E985E8411E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

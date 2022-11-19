@@ -201,7 +201,7 @@ namespace AngularSpaWebApi.Controllers
         }
 
         [HttpGet("logfiles")]
-        public async Task<string[]> GetLogFiles()
+        public async Task<FileObject[]> GetLogFiles()
         {
             // call Logger service to log exceptions
             using HttpClient client = new();
@@ -210,11 +210,20 @@ namespace AngularSpaWebApi.Controllers
                 new MediaTypeWithQualityHeaderValue("application/text"));
             client.DefaultRequestHeaders.Add("User-Agent", "Synthetic Exception Generator");
 
-            var result = await client.GetAsync($"{_loggerURI}/logfiles");
-            var response = result.Content.ReadAsStringAsync();
-            //var response = await client.GetAsync($"{_loggerURI}/logfiles", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-            string[] strarray = response.Result.ToString().Split(',');
-            return strarray;
+            var request = await client.GetAsync($"{_loggerURI}/logfiles");
+            var result = request.Content.ReadAsStringAsync().Result;
+            var jarray = JArray.Parse(result);
+
+            var response = new List<FileObject>();
+            foreach (var entry in jarray)
+                response.Add(new FileObject { Name = entry.ToString().Split('\\')[entry.ToString().Split('\\').Length - 1], Path = entry.ToString() });
+            return response.ToArray<FileObject>();
+        }
+
+        public class FileObject
+        {
+            public string Name { get; set; }
+            public string Path { get; set; }
         }
     }
 }
