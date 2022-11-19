@@ -1,6 +1,7 @@
 ﻿using LoggerApiDemo.LoggerClasses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -105,8 +106,8 @@ namespace LoggerApiDemo.Controllers
             return Ok($"CRITICAL log saved on {DateTime.Now}");
         }
 
-        [HttpGet("logs/{logtype}")]
-        public IActionResult Get(string logtype)
+        [HttpGet("logs/nlog/{logtype}")]
+        public IActionResult GetNlogLogType(string logtype)
         {
             // get 'logs' dir path
             var dirPath = $"{Directory.GetCurrentDirectory()}\\logs";
@@ -117,10 +118,28 @@ namespace LoggerApiDemo.Controllers
             {
                 //string path = System.Web.HttpContext.Current.Request.MapPath("~\\dataset.csv");
                 //var filePath = ThisServer.MapPath("logs");
-                var logFileName = logFilePath.Split("\\").Last();
-                var filePath = Path.Combine($"{Directory.GetCurrentDirectory()}\\logs", logFileName);
-                foreach (string result in System.IO.File.ReadAllLines(filePath).Where(x => x.Contains(logtype)))
-                    results.Add(result);
+                if (logFilePath.Contains("_logfile.txt"))
+                {
+                    var logFileName = logFilePath.Split("\\").Last();
+                    var filePath = Path.Combine($"{Directory.GetCurrentDirectory()}\\logs", logFileName);
+                    foreach (string result in System.IO.File.ReadAllLines(filePath).Where(x => x.Contains(logtype)))
+                        results.Add(result);
+                }
+            }
+            return Ok(results);
+        }
+
+        [HttpGet("logfiles")]
+        public IActionResult GetLogFiles()
+        {
+            // get 'logs' dir path
+            var dirPath = $"{Directory.GetCurrentDirectory()}\\logs";
+            var logFiles = Directory.GetFiles(dirPath).ToList();
+
+            var results = new List<string>();
+            foreach (string logFilePath in logFiles)
+            {
+                results.Add(logFilePath);
             }
             return Ok(results);
         }

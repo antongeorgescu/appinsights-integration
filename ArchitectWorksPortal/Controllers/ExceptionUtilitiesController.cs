@@ -5,6 +5,7 @@ using AngularSpaWebApi.Logger;
 using AngularSpaWebApi.Services;
 using Newtonsoft.Json.Linq;
 using ArchitectWorksPortal.SyntheticExceptionClasses;
+using System.Net.Http;
 
 namespace AngularSpaWebApi.Controllers
 {
@@ -197,6 +198,23 @@ namespace AngularSpaWebApi.Controllers
             var okResponse = new HttpResponseMessage();
             okResponse.Content = JsonContent.Create("All exceptions have been processed");
             return okResponse;
+        }
+
+        [HttpGet("logfiles")]
+        public async Task<string[]> GetLogFiles()
+        {
+            // call Logger service to log exceptions
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/text"));
+            client.DefaultRequestHeaders.Add("User-Agent", "Synthetic Exception Generator");
+
+            var result = await client.GetAsync($"{_loggerURI}/logfiles");
+            var response = result.Content.ReadAsStringAsync();
+            //var response = await client.GetAsync($"{_loggerURI}/logfiles", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            string[] strarray = response.Result.ToString().Split(',');
+            return strarray;
         }
     }
 }

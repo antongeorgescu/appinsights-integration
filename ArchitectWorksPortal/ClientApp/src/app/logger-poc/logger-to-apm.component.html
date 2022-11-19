@@ -18,6 +18,19 @@
       </tr>
     </tbody>
   </table>
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="logfiles">
+    <thead>
+      <tr>
+        <th>Log file path</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let file of logfiles">
+        <td>{{ file }}</td>
+      </tr>
+    </tbody>
+  </table>
   <p>Connection status: {{connectionResult}}</p>
-</div>  
+</div>
+
 

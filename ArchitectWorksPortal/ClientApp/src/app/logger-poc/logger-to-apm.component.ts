@@ -15,6 +15,7 @@ export class LoggerToApmComponent {
   public exlist:[] = [];
   public error: string = "";
   public connectionResult = "";
+  public logfiles: string[] = [];
   baseUrl: string = "";
   http: HttpClient;
 
@@ -70,7 +71,16 @@ export class LoggerToApmComponent {
         var entry = result[i];
         const ex = new Exception(entry.framework,entry.code,entry.type,entry.description);
         this.exceptionlist.push(ex)
-      }}, error => console.error(error));
+      }
+    }, error => console.error(error));
+    this.http.get<string[]>(this.baseUrl + 'exceptionutilities/logfiles').subscribe(result => {
+      console.log(result);
+      for (var i = 0; i < result.length; i++) {
+        // assign this inner object to a variable for simpler property access
+        var entry = result[i];
+        this.logfiles.push(entry)
+      }
+    }, error => console.error(error));
   }
 }
 
