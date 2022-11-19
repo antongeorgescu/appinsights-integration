@@ -1,4 +1,4 @@
-namespace AngularSpaWebApi;
+namespace AngularSpaWebApi.Classes;
 
 public class WeatherForecast
 {

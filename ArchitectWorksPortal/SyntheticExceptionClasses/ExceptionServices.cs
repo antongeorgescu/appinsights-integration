@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Text.RegularExpressions;
-using WebApiDemo.Controllers;
+using AngularSpaWebApi.Controllers;
 using System.Linq;
+using AngularSpaWebApi.Logger;
 
-namespace WebApiDemo.Services
+namespace AngularSpaWebApi.Services
 {
     public class ExceptionServices
     {

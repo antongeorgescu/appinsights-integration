@@ -2,10 +2,10 @@
 using System;
 using System.Drawing;
 using System.Security;
-using WebApiDemo.Controllers;
-using WebApiDemo.Services;
+using AngularSpaWebApi.Controllers;
+using AngularSpaWebApi.Services;
 
-namespace WebApiDemo
+namespace AngularSpaWebApi.Logger
 {
     public class ThrowErrorRequest
     {

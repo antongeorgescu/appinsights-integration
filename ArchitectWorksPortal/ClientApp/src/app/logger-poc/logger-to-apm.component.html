@@ -1,13 +1,23 @@
-<div style="display: inline-block;" >
-  <table>
-    <tr>
-      <td>First Name</td>
-      <td>Last Name</td>
-    </tr>
-    <tr>
-      <td>Anton</td>
-      <td>Georgescu</td>
-    </tr>
+<div style="display: inline-block;">
+  <p *ngIf="!exceptionlist"><em>Loading...</em></p>
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="exceptionlist">
+    <thead>
+      <tr>
+        <th>Framework</th>
+        <th>Code</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let exception of exceptionlist">
+        <td>{{ exception.framework }}</td>
+        <td>{{ exception.code }}</td>
+        <td>{{ exception.type }}</td>
+        <td>{{ exception.description }}</td>
+      </tr>
+    </tbody>
   </table>
+  <p>Connection status: {{connectionResult}}</p>
 </div>  
 

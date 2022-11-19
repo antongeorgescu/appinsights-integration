@@ -15,7 +15,7 @@ export interface ApplicationInfo {
 export class HomeComponent {
   displayedColumns: string[] = ['type', 'title', 'description', 'notes'];
   dataSource: ApplicationInfo[] = [];
-
+  
   public applications: ApplicationInfo[] = [];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {

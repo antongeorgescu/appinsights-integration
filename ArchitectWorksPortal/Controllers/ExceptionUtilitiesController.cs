@@ -1,24 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Text.RegularExpressions;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography.Xml;
-using Microsoft.Extensions.Configuration;
-using WebApiDemo.Services;
-using System.Drawing;
 using System.Net.Http.Headers;
-using System.Net.Http;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Net.Http.Json;
 using System.Net;
-using SyntheticExceptionApiDemo;
-using SyntheticExceptionApiDemo.Classes;
+using AngularSpaWebApi.Logger;
+using AngularSpaWebApi.Services;
+using Newtonsoft.Json.Linq;
+using ArchitectWorksPortal.SyntheticExceptionClasses;
 
-namespace WebApiDemo.Controllers
+namespace AngularSpaWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -58,6 +46,12 @@ namespace WebApiDemo.Controllers
             return Ok($"MLUtilities API started at {DateTime.Now}");
         }
 
+        [HttpGet("connection")]
+        public IActionResult GetConnectionStatus()
+        {
+            return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
+        }
+
         [HttpGet("generatetext/{count}")]
         public ActionResult<string> GenerateText(int count)
         {
@@ -66,10 +60,42 @@ namespace WebApiDemo.Controllers
         }
 
         [HttpGet("extypelist/{framework}")]
-        public ActionResult<IEnumerable<string>> GetExceptionList(string framework)
+        public ActionResult<IEnumerable<ExceptionType>> GetExceptionList(string framework)
         {
-            var exceptions = _configuration.GetSection($"Exceptions:{framework}").GetChildren();
-            return Ok(exceptions);
+            var lstExceptions = new List<object>();
+            if (framework == "all")
+            {
+                var fxsections = _configuration.GetSection($"Exceptions").GetChildren();
+                foreach (var fx in fxsections)
+                {
+                    var exceptions = _configuration.GetSection($"Exceptions:{fx.Key}").GetChildren();
+
+                    foreach (var extype in exceptions)
+                        lstExceptions.Add(
+                            new ExceptionType
+                            {
+                                Framework = fx.Key,
+                                Code = extype.Key,
+                                Type = extype.Value.ToString().Split('|')[0],
+                                Description = extype.Value.ToString().Split('|')[1]
+                            });
+                }
+            }
+            else
+            {
+                var exceptions = _configuration.GetSection($"Exceptions:{framework}").GetChildren();
+
+                foreach (var extype in exceptions)
+                    lstExceptions.Add(
+                        new ExceptionType
+                        {
+                            Framework = framework,
+                            Code = extype.Key,
+                            Type = extype.Value.ToString().Split('|')[0],
+                            Description = extype.Value.ToString().Split('|')[1]
+                        });
+            }
+            return Ok(lstExceptions);
         }
 
         [HttpPost("throwexception/instance")]

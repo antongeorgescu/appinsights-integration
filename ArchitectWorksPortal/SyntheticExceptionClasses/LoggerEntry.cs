@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SyntheticExceptionApiDemo.Classes
+namespace AngularSpaWebApi.Logger
 {
     public class LoggerEntry
     {
