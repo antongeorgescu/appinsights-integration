@@ -13,12 +13,15 @@ import { catchError, throwError, Observable } from 'rxjs';
 export class LoggerToApmComponent {
   public exceptionlist: Exception[] = [];
   public exlist:[] = [];
-  public error: string = "";
-  public connectionResult = "";
+  public error?: string;
+  public connectionResult?: string;
   public logfiles: FileObject[] = [];
   public uriDesignDiagram: any;
-  baseUrl: string = "";
+  baseUrl?: string;
   http: HttpClient;
+
+  selectedFile?: string;
+  public logContent?: string = "";
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -49,6 +52,14 @@ export class LoggerToApmComponent {
         var entry = result[i];
         this.logfiles.push(entry)
       }
+    }, error => console.error(error));
+  }
+
+  onSelect(file: string): void {
+    this.selectedFile = file;
+    this.http.get<string[]>(this.baseUrl + 'exceptionutilities/logfilecontent/' + file).subscribe(result => {
+      console.log(result);
+      this.logContent = result.join('\r');
     }, error => console.error(error));
   }
 }

@@ -220,6 +220,23 @@ namespace AngularSpaWebApi.Controllers
             return response.ToArray<FileObject>();
         }
 
+        [HttpGet("logfilecontent/{filename}")]
+        public async Task<string[]> GetLogFileContent(string filename)
+        {
+            // call Logger service to log exceptions
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/text"));
+            client.DefaultRequestHeaders.Add("User-Agent", "Synthetic Exception Generator");
+
+            var request = await client.GetAsync($"{_loggerURI}/logfilecontent/{filename}");
+            var result = request.Content.ReadAsStringAsync().Result;
+            var response = result.Replace('\n', ' ').Split('\r');
+
+            return response;
+        }
+
         public class FileObject
         {
             public string Name { get; set; }

@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -142,6 +143,16 @@ namespace LoggerApiDemo.Controllers
                 results.Add(logFilePath);
             }
             return Ok(results);
+        }
+
+        [HttpGet("logfilecontent/{filename}")]
+        public IActionResult GetLogFileContent(string filename)
+        {
+            // get 'logs' dir path
+            var dirPath = $"{Directory.GetCurrentDirectory()}\\logs";
+            var logcontent = System.IO.File.ReadAllText($"{dirPath}\\{filename}");
+            
+            return Ok(logcontent);
         }
     }
 }
