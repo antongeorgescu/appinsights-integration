@@ -6,6 +6,7 @@ using AngularSpaWebApi.Services;
 using Newtonsoft.Json.Linq;
 using ArchitectWorksPortal.SyntheticExceptionClasses;
 using System.Net.Http;
+using System;
 
 namespace AngularSpaWebApi.Controllers
 {
@@ -169,7 +170,7 @@ namespace AngularSpaWebApi.Controllers
         }
 
         [HttpGet("exceptionlist/{count}")]
-        public async Task<HttpResponseMessage> GetRandomExceptions(int count)
+        public async Task<string> GetRandomExceptions(int count)
         {
             var exceptions = ExceptionServices.GenerateRandomErrorList(count);
 
@@ -187,17 +188,18 @@ namespace AngularSpaWebApi.Controllers
                     Class = ex.Class,
                     Description = ex.Description,
                     Type = ex.Code,
-                    CreateDate = DateTime.Now
+                    CreateDate = DateTime.Now,
+                    Message = ex.Message
                 });
 
                 using HttpResponseMessage response = await client.PostAsync($"{_loggerURI}/log/error", content);
                 if (!response.StatusCode.Equals(HttpStatusCode.OK))
-                    return response;
+                    return response.Content.ReadAsStringAsync().ToString();
             }
 
-            var okResponse = new HttpResponseMessage();
-            okResponse.Content = JsonContent.Create("All exceptions have been processed");
-            return okResponse;
+            //HttpResponseMessage okResponse = new HttpResponseMessage();
+            //okResponse.Content = JsonContent.Create("All exceptions have been processed");
+            return $"{count} synthetic logs have been generated.";
         }
 
         [HttpGet("logfiles")]
@@ -233,6 +235,7 @@ namespace AngularSpaWebApi.Controllers
             var request = await client.GetAsync($"{_loggerURI}/logfilecontent/{filename}");
             var result = request.Content.ReadAsStringAsync().Result;
             var response = result.Replace('\n', ' ').Split('\r');
+            Array.Reverse(response, 0, response.Length);
 
             return response;
         }

@@ -3,9 +3,9 @@
     <p *ngIf="!exceptionlist"><em>Loading...</em></p>
     <span class="input-group-text input-group-sizing-s" ><b># Random exceptions to generate:</b></span>
     <div class="col-xs-2">
-      <input type="text" size="1" value="10" class="form-control-sm" id="generateCount" />
+      <input type="text" size="1" value="10" class="form-control-sm" #generateExCount />
     </div>
-    <button class="btn btn-dark" type="button" id="button-addon1">Generate</button>
+    <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptions();">Generate</button>
     <button class="btn btn-primary" type="button" (click)="exceptionListCollapse.toggle()" style="border:solid;border-width:1px;border-color:white;"
             [attr.aria-expanded]="!exceptionListCollapse.collapsed" aria-controls="exceptionList">
       Toggle Exception Types
@@ -14,6 +14,9 @@
             [attr.aria-expanded]="!designCollapse.collapsed" aria-controls="designDiagram">
       Toggle Design Diagram
     </button>
+  </div>
+  <div>
+    <label style="font-size:small;color:red">{{logsGeneratedResponse}}</label>
   </div>
   <div>
     <div style="float: left; width:20%">

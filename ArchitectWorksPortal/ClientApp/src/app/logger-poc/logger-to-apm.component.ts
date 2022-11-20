@@ -1,4 +1,4 @@
-import { Component,Inject } from '@angular/core';
+import { Component,ElementRef,Inject, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, throwError, Observable } from 'rxjs';
 
@@ -17,11 +17,14 @@ export class LoggerToApmComponent {
   public connectionResult?: string;
   public logfiles: FileObject[] = [];
   public uriDesignDiagram: any;
+  public logsGeneratedResponse?: string;
   baseUrl?: string;
   http: HttpClient;
 
   selectedFile?: string;
   public logContent?: string = "";
+
+  @ViewChild('generateExCount') generateExCount?: ElementRef;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -56,11 +59,24 @@ export class LoggerToApmComponent {
   }
 
   onSelect(file: string): void {
+    this.logsGeneratedResponse = "";
     this.selectedFile = file;
     this.http.get<string[]>(this.baseUrl + 'exceptionutilities/logfilecontent/' + file).subscribe(result => {
       console.log(result);
       this.logContent = result.join('\r');
     }, error => console.error(error));
+  }
+
+  onGenerateExceptions(): void {
+    this.logsGeneratedResponse = "";
+    const valueInput = this.generateExCount?.nativeElement.value;
+    this.http.get<string>(this.baseUrl + 'exceptionutilities/exceptionlist/' + valueInput).subscribe(result => {
+      console.log(result);
+      this.logsGeneratedResponse = 'Ok: Generated ' + valueInput + ' log entries;';
+    }, error => {
+      console.error(error);
+      this.logsGeneratedResponse = 'Error:' + error.message;
+    });
   }
 }
 

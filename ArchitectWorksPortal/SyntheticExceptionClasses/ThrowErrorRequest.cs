@@ -52,7 +52,7 @@ namespace AngularSpaWebApi.Logger
             set { _status = value; }
         }
 
-        public void Generate(int wordcount = 0)
+        public ThrowErrorRequest Generate(int wordcount = 0)
         {
             Random res = new Random();
             if (wordcount == 0)
@@ -64,7 +64,7 @@ namespace AngularSpaWebApi.Logger
             var statusList = ExceptionUtilitiesController.HttpResponseStatusList;
             _status = statusList[res.Next(0, statusList.Count-1)];
             _serialized = $"CLASS:{_class}|DESCRIPTION:{_description}|MESSAGE:{_message}|STATUS:{_status}";
-            return;
+            return this;
         }
     }
 }

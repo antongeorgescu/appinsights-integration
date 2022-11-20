@@ -78,10 +78,9 @@ namespace AngularSpaWebApi.Services
                         Code = fxCodeClassDescriptionList[index].Item1,
                         Framework = framework,
                         Class = fxCodeClassDescriptionList[index].Item2,
-                        Description = fxCodeClassDescriptionList[index].Item3
+                        Description = fxCodeClassDescriptionList[index].Item3,
                     };
-                    error.Generate();
-                    exlist.Add(error);
+                    exlist.Add(error.Generate());
                 }
             }
             else
@@ -101,8 +100,7 @@ namespace AngularSpaWebApi.Services
                         Class = fxCodeClassDescriptionList[index].Item2,
                         Description = fxCodeClassDescriptionList[index].Item3
                     };
-                    error.Generate();
-                    exlist.Add(error);
+                    exlist.Add(error.Generate());
                 }
             }
             

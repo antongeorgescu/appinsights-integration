@@ -34,3 +34,8 @@ body {
 .custom-font {
   font-size: 14px;
 }
+
+.link-active {
+  color: red;
+  font-weight:bold;
+}
