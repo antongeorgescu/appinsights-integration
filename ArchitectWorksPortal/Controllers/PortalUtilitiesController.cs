@@ -18,7 +18,7 @@ namespace AngularSpaWebApi.Controllers
             using (StreamReader r = new StreamReader("Data/works.json"))
             {
                 string json = r.ReadToEnd();
-                List<ApplicationInfo> works = JsonConvert.DeserializeObject<List<ApplicationInfo>>(json);
+                List<ApplicationInfo>? works = JsonConvert.DeserializeObject<List<ApplicationInfo>>(json);
                 foreach (var work in works)
                     apps.Add(new ApplicationInfo()
                     {
@@ -32,11 +32,17 @@ namespace AngularSpaWebApi.Controllers
             return apps;
         }
 
-        // GET api/<PortalUtilitiesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("designdiagram/{pocname}")]
+        public ActionResult<Uri> GetDiagram(string pocname)
         {
-            return "value";
+            Uri? diagramLink = null;
+            switch (pocname)
+            {
+                case "loggerapm":
+                    diagramLink = new Uri("/assets/images/Logger-with-APM-Provides-POC.jpg");
+                    break;
+            }
+            return Ok(diagramLink);
         }
 
         // POST api/<PortalUtilitiesController>

@@ -16,12 +16,15 @@ export class LoggerToApmComponent {
   public error: string = "";
   public connectionResult = "";
   public logfiles: FileObject[] = [];
+  public uriDesignDiagram: any;
   baseUrl: string = "";
   http: HttpClient;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
     this.http = http;
+
+    this.uriDesignDiagram = new URL(this.baseUrl + 'assets/images/Logger-with-APM-Provides-POC.jpg');
 
     this.http.get<Connectivity>(this.baseUrl + 'exceptionutilities/connection').subscribe(result => {
       console.log(result.status + " at " + result.datetime);

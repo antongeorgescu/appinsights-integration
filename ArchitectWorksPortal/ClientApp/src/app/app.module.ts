@@ -13,7 +13,6 @@ import { LoggerToApmComponent } from './logger-poc/logger-to-apm.component';
 import { DemoMaterialModule } from './ng.material.module';
 //import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
-//import { Ng2OdometerModule } from 'ng2-odometer';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 
 @NgModule({
@@ -33,7 +32,6 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
     DemoMaterialModule,
     MatNativeDateModule,
     MdbCollapseModule,
-    //Ng2OdometerModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },

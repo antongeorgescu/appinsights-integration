@@ -216,7 +216,7 @@ namespace AngularSpaWebApi.Controllers
 
             var response = new List<FileObject>();
             foreach (var entry in jarray)
-                response.Add(new FileObject { Name = entry.ToString().Split('\\')[entry.ToString().Split('\\').Length - 1], Path = entry.ToString() });
+                response.Add(new FileObject { Name = entry.ToString().Split('\\')[entry.ToString().Split('\\').Length - 1], Path = $"file://{entry}" });
             return response.ToArray<FileObject>();
         }
 
