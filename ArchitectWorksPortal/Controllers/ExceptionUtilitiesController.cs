@@ -61,6 +61,13 @@ namespace AngularSpaWebApi.Controllers
             return Ok(string.Join(' ', lstWords));
         }
 
+        [HttpGet("generatemessage/ipsumlorem")]
+        public ActionResult<string> GenerateMessageIpsumLorem()
+        {
+            var message = ExceptionServices.GenerateRandomLoremIpsumMessage();
+            return Ok(message);
+        }
+
         [HttpGet("extypelist/{framework}")]
         public ActionResult<IEnumerable<ExceptionType>> GetExceptionList(string framework)
         {

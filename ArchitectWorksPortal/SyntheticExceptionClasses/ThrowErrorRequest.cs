@@ -55,12 +55,8 @@ namespace AngularSpaWebApi.Logger
         public ThrowErrorRequest Generate(int wordcount = 0)
         {
             Random res = new Random();
-            if (wordcount == 0)
-            {
-                // generate a random # words between 5 and 15
-                wordcount = res.Next(5, 15);
-            }
-            _message = string.Join(' ', ExceptionServices.GenerateSyntheticMessage(wordcount));
+            
+            _message = ExceptionServices.GenerateRandomLoremIpsumMessage();
             var statusList = ExceptionUtilitiesController.HttpResponseStatusList;
             _status = statusList[res.Next(0, statusList.Count-1)];
             _serialized = $"CLASS:{_class}|DESCRIPTION:{_description}|MESSAGE:{_message}|STATUS:{_status}";

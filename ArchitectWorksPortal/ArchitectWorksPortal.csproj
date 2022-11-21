@@ -28,6 +28,13 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\proxy.conf.json" />
+    <None Remove="Data\messages.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\messages.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

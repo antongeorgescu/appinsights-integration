@@ -53,6 +53,15 @@ namespace AngularSpaWebApi.Services
             return lstWord;
         }
 
+        public static string GenerateRandomLoremIpsumMessage()
+        {
+            // pick up randomy a message out of messages.txt file
+            var messages = File.ReadAllText("Data/messages.txt").Split('.').ToList();
+
+            var rnd = new Random();
+            return messages[rnd.Next(0, messages.Count - 1)];
+        }
+
         public static List<ThrowErrorRequest> GenerateRandomErrorList(int count, string framework = null)
         {
             var exlist = new List<ThrowErrorRequest>();

@@ -1,10 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using static ControllersUnitTests.Utilities;
 
 namespace ControllersUnitTests
 {
@@ -40,31 +44,28 @@ namespace ControllersUnitTests
 
             var response = new List<FileObject>();
             foreach (var entry in jarray)
-                response.Add(new FileObject { Name = entry.ToString().Split('\\')[entry.ToString().Split('\\').Length-1], Path = entry.ToString() }); 
+                response.Add(new FileObject { Name = entry.ToString().Split('\\')[entry.ToString().Split('\\').Length - 1], Path = entry.ToString() });
 
             Assert.IsTrue(response.ToArray().Length == 5);
         }
 
-        internal class FileObject
-        {
-            internal string Name { get; set; }
-            internal string Path { get; set; }
-        }
+
 
         [TestMethod]
         public void TestReverseArray()
         {
             // Creates and initializes a new Array.
             Array myArray = Array.CreateInstance(typeof(string), 9);
-            myArray.SetValue("The", 0);
-            myArray.SetValue("QUICK", 1);
-            myArray.SetValue("BROWN", 2);
-            myArray.SetValue("FOX", 3);
-            myArray.SetValue("jumps", 4);
-            myArray.SetValue("over", 5);
-            myArray.SetValue("the", 6);
-            myArray.SetValue("lazy", 7);
-            myArray.SetValue("dog", 8);
+
+            var message = randomTraceMessage();
+            var k = 0;
+            foreach (var word in message.Split(' '))
+            {
+                if (string.IsNullOrWhiteSpace(word)) continue;
+                myArray.SetValue(word.ToLower(), k++);
+            }
+            
+            var beforeLength = myArray.Length;
 
             // Displays the values of the Array.
             TestContext.WriteLine("Before reversing:");
@@ -78,7 +79,58 @@ namespace ControllersUnitTests
             TestContext.WriteLine("After reversing:");
             for (int i = myArray.GetLowerBound(0); i <= myArray.GetUpperBound(0); i++)
                 TestContext.WriteLine("\t[{0}]:\t{1}", i, myArray.GetValue(i));
+
+            var afterLength = myArray.Length;
+            
+            Assert.AreEqual(beforeLength, afterLength);
         }
 
+        [TestMethod]
+        public void TestSaveLogToAppInisghts()
+        {
+
+            // In this scenario we call Application Insights API directly
+            TelemetryConfiguration configuration = TelemetryConfiguration.CreateDefault();
+
+            configuration.ConnectionString = "InstrumentationKey=d1bd2953-8f92-4657-b2c0-cf23a6fc8c85;IngestionEndpoint=https://centralus-2.in.applicationinsights.azure.com/;LiveEndpoint=https://centralus.livediagnostics.monitor.azure.com/";
+            configuration.TelemetryInitializers.Add(new HttpDependenciesParsingTelemetryInitializer());
+
+            //TelemetryConfiguration configuration = TelemetryConfiguration.Active; // Reads ApplicationInsights.config file if present
+
+            var telemetryClient = new TelemetryClient(configuration);
+            using (InitializeDependencyTracking(configuration))
+            {
+                // run app...
+
+                // repeat the submission 10 times
+                for (int i = 0; i < 10; i++)
+                {
+                    var traceMessage = randomTraceMessage();
+                    telemetryClient.TrackTrace(traceMessage, randomSeverityLevel());
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        // Http dependency is automatically tracked!
+                        httpClient.GetAsync("https://microsoft.com").Wait();
+                    }
+
+                    Task.Delay(2000).Wait();
+                }
+
+            }
+
+            // before exit, flush the remaining data
+            telemetryClient.Flush();
+
+            // Console apps should use the WorkerService package.
+            // This uses ServerTelemetryChannel which does not have synchronous flushing.
+            // For this reason we add a short 5s delay in this sample.
+
+            Task.Delay(5000).Wait();
+
+            // If you're using InMemoryChannel, Flush() is synchronous and the short delay is not required.
+
+            Assert.IsNotNull(telemetryClient);
+        }
     }
 }
