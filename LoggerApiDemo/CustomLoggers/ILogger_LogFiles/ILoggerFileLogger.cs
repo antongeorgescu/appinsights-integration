@@ -32,7 +32,7 @@ namespace LoggerApiDemo.ILoggerClasses.LogFiles
             }
 
             var fullFilePath = _iLoggerFileLoggerProvider.Options.FolderPath + "/" + _iLoggerFileLoggerProvider.Options.FilePath.Replace("{date}", DateTimeOffset.UtcNow.ToString("yyyyMMdd"));
-            var logRecord = string.Format("{0} [{1}] {2} {3}", "[" + DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss+00:00") + "]", logLevel.ToString(), formatter(state, exception), exception != null ? exception.StackTrace : "");
+            var logRecord = string.Format("[{0}] [{1}] *EVENT/ID*{2} {3} {4}", DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss+00:00"), logLevel.ToString(), eventId.Name, formatter(state, exception), exception != null ? exception.StackTrace : "");
 
             using (var streamWriter = new StreamWriter(fullFilePath, true))
             {

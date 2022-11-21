@@ -25,6 +25,8 @@ export class LoggerToApmComponent {
   public logContent?: string = "";
 
   @ViewChild('generateExCount') generateExCount?: ElementRef;
+  @ViewChild('logGenerationResultRef') logGenerationResultRef?: ElementRef;
+  logGenerationResultLabel?: HTMLElement;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -39,6 +41,7 @@ export class LoggerToApmComponent {
   }
 
   ngOnInit() {
+    this.logGenerationResultLabel = this.logGenerationResultRef?.nativeElement;
     this.http.get<Exception[]>(this.baseUrl + 'exceptionutilities/extypelist/all').subscribe(result => {
       console.log(result);
       for (var i = 0; i < result.length; i++) {
@@ -70,11 +73,13 @@ export class LoggerToApmComponent {
   onGenerateExceptions(): void {
     this.logsGeneratedResponse = "";
     const valueInput = this.generateExCount?.nativeElement.value;
-    this.http.get<string>(this.baseUrl + 'exceptionutilities/exceptionlist/' + valueInput).subscribe(result => {
+    this.http.get(this.baseUrl + 'exceptionutilities/exceptionlist/' + valueInput).subscribe(result => {
       console.log(result);
-      this.logsGeneratedResponse = 'Ok: Generated ' + valueInput + ' log entries;';
+      //this.logGenerationResultLabel?.style.color. = "black";
+      this.logsGeneratedResponse = 'Ok:' + result;
     }, error => {
       console.error(error);
+      //this.logGenerationResultLabel?.style.color = "red";
       this.logsGeneratedResponse = 'Error:' + error.message;
     });
   }

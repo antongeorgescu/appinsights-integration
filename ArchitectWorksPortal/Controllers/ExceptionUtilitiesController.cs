@@ -139,7 +139,7 @@ namespace AngularSpaWebApi.Controllers
         }
 
         [HttpGet("exceptionlist/{count}/{framework}")]
-        public async Task<HttpResponseMessage> GetRandomFrameworkExceptions(int count,string framework)
+        public async Task<ActionResult<string>> GetRandomFrameworkExceptions(int count,string framework)
         {
             var exceptions = ExceptionServices.GenerateRandomErrorList(count,framework);
 
@@ -161,16 +161,16 @@ namespace AngularSpaWebApi.Controllers
 
                 using HttpResponseMessage response = await client.PostAsync($"{_loggerURI}/log/error",content);
                 if (!response.StatusCode.Equals(HttpStatusCode.OK))
-                    return response;
+                    return BadRequest(response.Content.ReadAsStringAsync().Result);
             }
 
             var okResponse = new HttpResponseMessage();
-            okResponse.Content = JsonContent.Create("All exceptions have been processed");
-            return okResponse;
+            okResponse.Content = JsonContent.Create($"{count} synthetic logs for {framework} have been generated.");
+            return Ok(okResponse.Content.ReadAsStringAsync().Result);
         }
 
         [HttpGet("exceptionlist/{count}")]
-        public async Task<string> GetRandomExceptions(int count)
+        public async Task<ActionResult<string>> GetRandomExceptions(int count)
         {
             var exceptions = ExceptionServices.GenerateRandomErrorList(count);
 
@@ -194,12 +194,12 @@ namespace AngularSpaWebApi.Controllers
 
                 using HttpResponseMessage response = await client.PostAsync($"{_loggerURI}/log/error", content);
                 if (!response.StatusCode.Equals(HttpStatusCode.OK))
-                    return response.Content.ReadAsStringAsync().ToString();
+                    return BadRequest(response.Content.ReadAsStringAsync().Result);
             }
 
-            //HttpResponseMessage okResponse = new HttpResponseMessage();
-            //okResponse.Content = JsonContent.Create("All exceptions have been processed");
-            return $"{count} synthetic logs have been generated.";
+            var okResponse = new HttpResponseMessage();
+            okResponse.Content = JsonContent.Create($"{count} synthetic logs have been generated.");
+            return Ok(okResponse.Content.ReadAsStringAsync().Result);
         }
 
         [HttpGet("logfiles")]
