@@ -32,7 +32,7 @@ export class LoggerToApmComponent {
     this.baseUrl = baseUrl;
     this.http = http;
 
-    this.uriDesignDiagram = new URL(this.baseUrl + 'assets/images/Logger-with-APM-Provides-POC.jpg');
+    this.uriDesignDiagram = new URL(this.baseUrl + 'assets/images/Logger-AppInsights-POC.jpg');
 
     this.http.get<Connectivity>(this.baseUrl + 'exceptionutilities/connection').subscribe(result => {
       console.log(result.status + " at " + result.datetime);
