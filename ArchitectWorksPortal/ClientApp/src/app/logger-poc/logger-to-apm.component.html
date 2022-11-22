@@ -1,11 +1,12 @@
 <div>
   <div class="input-group input-group-sm mb-7">
     <p *ngIf="!exceptionlist"><em>Loading...</em></p>
-    <span class="input-group-text input-group-sizing-s" ><b># Random synthetic exceptions to generate:</b></span>
+    <span class="input-group-text input-group-sizing-s"><b># Random synthetic events to generate:</b></span>
     <div class="col-xs-2">
       <input type="text" size="1" value="10" class="form-control-sm" #generateExCount />
     </div>
-    <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptions();">Generate</button>
+    <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptions();" style="border:solid;border-width:1px;border-color:white;">Generate Application Logs</button>
+    <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateRequests();" style="border:solid;border-width:1px;border-color:white;">Generate Server Requests</button>
     <button class="btn btn-primary" type="button" (click)="exceptionListCollapse.toggle()" style="border:solid;border-width:1px;border-color:white;"
             [attr.aria-expanded]="!exceptionListCollapse.collapsed" aria-controls="exceptionList">
       Toggle Exception Types

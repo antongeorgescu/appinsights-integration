@@ -10,7 +10,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using static ControllersUnitTests.Utilities;
 
-namespace ControllersUnitTests
+namespace ControllersUnitTests.ExceptionUtilities
 {
     [TestClass]
     public class ExceptionUtilitiesTests
@@ -85,52 +85,6 @@ namespace ControllersUnitTests
             Assert.AreEqual(beforeLength, afterLength);
         }
 
-        [TestMethod]
-        public void TestSaveLogToAppInisghts()
-        {
-
-            // In this scenario we call Application Insights API directly
-            TelemetryConfiguration configuration = TelemetryConfiguration.CreateDefault();
-
-            configuration.ConnectionString = "InstrumentationKey=d1bd2953-8f92-4657-b2c0-cf23a6fc8c85;IngestionEndpoint=https://centralus-2.in.applicationinsights.azure.com/;LiveEndpoint=https://centralus.livediagnostics.monitor.azure.com/";
-            configuration.TelemetryInitializers.Add(new HttpDependenciesParsingTelemetryInitializer());
-
-            //TelemetryConfiguration configuration = TelemetryConfiguration.Active; // Reads ApplicationInsights.config file if present
-
-            var telemetryClient = new TelemetryClient(configuration);
-            using (InitializeDependencyTracking(configuration))
-            {
-                // run app...
-
-                // repeat the submission 10 times
-                for (int i = 0; i < 10; i++)
-                {
-                    var traceMessage = randomTraceMessage();
-                    telemetryClient.TrackTrace(traceMessage, randomSeverityLevel());
-
-                    using (var httpClient = new HttpClient())
-                    {
-                        // Http dependency is automatically tracked!
-                        httpClient.GetAsync("https://microsoft.com").Wait();
-                    }
-
-                    Task.Delay(2000).Wait();
-                }
-
-            }
-
-            // before exit, flush the remaining data
-            telemetryClient.Flush();
-
-            // Console apps should use the WorkerService package.
-            // This uses ServerTelemetryChannel which does not have synchronous flushing.
-            // For this reason we add a short 5s delay in this sample.
-
-            Task.Delay(5000).Wait();
-
-            // If you're using InMemoryChannel, Flush() is synchronous and the short delay is not required.
-
-            Assert.IsNotNull(telemetryClient);
-        }
+        
     }
 }

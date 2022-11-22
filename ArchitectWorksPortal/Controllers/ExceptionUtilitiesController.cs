@@ -45,7 +45,7 @@ namespace AngularSpaWebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok($"MLUtilities API started at {DateTime.Now}");
+            return Ok($"ExceptionUtilities API started at {DateTime.Now}");
         }
 
         [HttpGet("connection")]

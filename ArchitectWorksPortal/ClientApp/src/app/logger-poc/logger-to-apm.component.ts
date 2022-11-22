@@ -71,12 +71,26 @@ export class LoggerToApmComponent {
   }
 
   onGenerateExceptions(): void {
-    this.logsGeneratedResponse = "";
+    this.logsGeneratedResponse = "Working hard to generate synthetic exceptions...";
     const valueInput = this.generateExCount?.nativeElement.value;
     this.http.get(this.baseUrl + 'exceptionutilities/exceptionlist/' + valueInput).subscribe(result => {
       console.log(result);
       //this.logGenerationResultLabel?.style.color. = "black";
       this.logsGeneratedResponse = 'Ok:' + result;
+    }, error => {
+      console.error(error);
+      //this.logGenerationResultLabel?.style.color = "red";
+      this.logsGeneratedResponse = 'Error:' + error.message;
+    });
+  }
+
+  onGenerateRequests(): void {
+    this.logsGeneratedResponse = "Working hard to generate synthetic server requests...";
+    const valueInput = this.generateExCount?.nativeElement.value;
+    this.http.get < HttpContent>(this.baseUrl + 'metricsutilities/serverrequests/' + valueInput).subscribe(result => {
+      console.log(result);
+      //this.logGenerationResultLabel?.style.color. = "black";
+      this.logsGeneratedResponse = 'Ok:' + result.content;
     }, error => {
       console.error(error);
       //this.logGenerationResultLabel?.style.color = "red";
@@ -107,4 +121,10 @@ interface FileObject {
 interface Connectivity {
   status: string;
   datetime: string;
+}
+
+export interface HttpContent {
+  content?: string;
+  contentType?: string;
+  statusCode?: string;
 }
