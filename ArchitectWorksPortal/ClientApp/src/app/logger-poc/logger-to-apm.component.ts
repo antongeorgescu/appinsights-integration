@@ -97,6 +97,25 @@ export class LoggerToApmComponent {
       this.logsGeneratedResponse = 'Error:' + error.message;
     });
   }
+
+  async onGenerateAvailability() {
+    this.logsGeneratedResponse = "Working hard to generate synthetic availability probes...";
+    const valueInput = this.generateExCount?.nativeElement.value;
+
+    for (let i = 0; i < valueInput; i++) {
+      this.http.get<HttpContent>(this.baseUrl + 'metricsutilities/availabilityprobes').subscribe(result => {
+        console.log(result);
+        //this.logGenerationResultLabel?.style.color. = "black";
+        this.logsGeneratedResponse = `[Call ${i}] Ok: + ${result.content}`;
+      }, error => {
+        console.error(error);
+        //this.logGenerationResultLabel?.style.color = "red";
+        this.logsGeneratedResponse = `[Call ${i}] Error: + ${error.message}`;
+      });
+
+      await new Promise(f => setTimeout(f, 1000));
+    }
+  }
 }
 
 class Exception {

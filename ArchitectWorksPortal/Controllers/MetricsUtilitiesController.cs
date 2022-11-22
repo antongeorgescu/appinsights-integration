@@ -11,6 +11,10 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
 using Microsoft.ApplicationInsights;
 using System.IO;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.DataContracts;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using System.Diagnostics;
 
 namespace AngularSpaWebApi.Controllers
 {
@@ -48,7 +52,7 @@ namespace AngularSpaWebApi.Controllers
         }
 
         [HttpGet("serverrequests/{count}")]
-        public async Task<ActionResult<string>> GenerateText(int count)
+        public async Task<ActionResult<string>> GenerateServerRequests(int count)
         {
             // Create a TelemetryConfiguration instance.
             TelemetryConfiguration config = TelemetryConfiguration.CreateDefault();
@@ -116,6 +120,75 @@ namespace AngularSpaWebApi.Controllers
             return Ok(Content($"{count} tracked server requests collected."));
         }
 
-        
+        [HttpGet("availabilityprobes")]
+        public async Task<ActionResult> GenerateAvailabilityProbes()
+        {
+            // Create a TelemetryConfiguration instance.
+            TelemetryConfiguration config = TelemetryConfiguration.CreateDefault();
+            config.ConnectionString = _telemetryConfigConnectionString;
+            config.TelemetryChannel = new InMemoryChannel();
+
+            // Create a TelemetryClient instance. It is important
+            // to use the same TelemetryConfiguration here as the one
+            // used to set up Live Metrics.
+            TelemetryClient client = new TelemetryClient(config);
+
+            var availability = new AvailabilityTelemetry
+            {
+                Name = "ProbeAvailabilityOfSynthURL",
+                RunLocation = "Central US",
+                Success = false,
+            };
+
+            availability.Context.Operation.ParentId = Activity.Current?.SpanId.ToString();
+            availability.Context.Operation.Id = Activity.Current?.RootId;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            string response;
+            try
+            {
+                using (var activity = new Activity("AvailabilityContext"))
+                {
+                    activity.Start();
+                    availability.Id = Activity.Current?.SpanId.ToString();
+                    // Run business logic 
+                    response = await RunAvailabilityTestAsync();
+                }
+                availability.Success = true;
+            }
+
+            catch (Exception ex)
+            {
+                availability.Message = ex.Message;
+                throw;
+            }
+
+            finally
+            {
+                stopwatch.Stop();
+                availability.Duration = stopwatch.Elapsed;
+                availability.Timestamp = DateTimeOffset.UtcNow;
+                client.TrackAvailability(availability);
+                client.Flush();
+
+                
+            }
+            return Ok(Content(response));
+
+
+        }
+
+        public async static Task<string> RunAvailabilityTestAsync()
+        {
+            int _inx;
+            using (var httpClient = new HttpClient())
+            {
+                Random rns = new Random();
+                _inx = rns.Next(0, MetricsUtilitiesController._trackedWebRequests.Length - 1);
+                await httpClient.GetStringAsync(_trackedWebRequests[_inx]);
+                return $"Probed for availability {_trackedWebRequests[_inx]}";
+            }
+        }
     }
 }
