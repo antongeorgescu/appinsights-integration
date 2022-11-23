@@ -127,6 +127,10 @@ namespace AngularSpaWebApi.Controllers
         [HttpGet("availabilityprobes")]
         public async Task<ActionResult> GenerateAvailabilityProbes()
         {
+            var startRequest = new DateTime();
+            var stopwatch2 = new Stopwatch();
+            stopwatch2.Start();
+
             // Create a TelemetryConfiguration instance.
             TelemetryConfiguration config = TelemetryConfiguration.CreateDefault();
             config.ConnectionString = _telemetryConfigConnectionString;
@@ -160,11 +164,16 @@ namespace AngularSpaWebApi.Controllers
                     response = await RunAvailabilityTestAsync();
                 }
                 availability.Success = true;
+
+                stopwatch2.Stop();
+                client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch2.ElapsedTicks), "200", true);
             }
 
             catch (Exception ex)
             {
                 availability.Message = ex.Message;
+                stopwatch2.Stop();
+                client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch2.ElapsedTicks), "500", false);
                 throw;
             }
 
@@ -175,8 +184,10 @@ namespace AngularSpaWebApi.Controllers
                 availability.Timestamp = DateTimeOffset.UtcNow;
                 client.TrackAvailability(availability);
                 client.Flush();
+                stopwatch2.Stop();
+                client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch2.ElapsedTicks), "200", true);
 
-                
+
             }
             return Ok(Content(response));
 
