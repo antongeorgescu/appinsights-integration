@@ -87,6 +87,7 @@ namespace AngularSpaWebApi.Controllers
 
             // This sample runs indefinitely. Replace with actual application logic.
             Random rns = new Random();
+            int okCount = 0;
             for (int i = 0; i < count; i++)
             {
                 // Send dependency and request telemetry.
@@ -97,6 +98,7 @@ namespace AngularSpaWebApi.Controllers
 
                 var startCall = new DateTime();
                 TimeSpan callDuration = TimeSpan.Zero;
+                
                 try
                 {
                     HttpResponseMessage response = await (new HttpClient()).GetAsync(_trackedWebDependencies[inx]);
@@ -104,24 +106,49 @@ namespace AngularSpaWebApi.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, true);
+
+                        client.TrackRequest(new RequestTelemetry()
+                        {
+                            Name = "SynthTrackedDependencies",
+                            Timestamp = DateTime.UtcNow,
+                            Duration = new TimeSpan(stopwatch.ElapsedTicks),
+                            ResponseCode = "200",
+                            Success = true
+                        });
+                        
                         client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch.ElapsedTicks), "200", true);
+                        okCount++;
                     }
                     else
                     {
                         client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, false);
-                        client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch.ElapsedTicks), response.StatusCode.ToString(), false);
+                        client.TrackRequest(new RequestTelemetry()
+                        {
+                            Name = "SynthTrackedDependencies",
+                            Timestamp = DateTime.UtcNow,
+                            Duration = new TimeSpan(stopwatch.ElapsedTicks),
+                            ResponseCode = "500",
+                            Success = false
+                        });
                     }
                 }
                 catch (Exception ex)
                 {
                     client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, false);
-                    client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch.ElapsedTicks), "500", false);
+                    client.TrackRequest(new RequestTelemetry()
+                    {
+                        Name = "SynthTrackedDependencies",
+                        Timestamp = DateTime.UtcNow,
+                        Duration = new TimeSpan(stopwatch.ElapsedTicks),
+                        ResponseCode = "500",
+                        Success = false
+                    });
                 }
 
                 //client
                 Task.Delay(1000).Wait();
             }
-            return Ok(Content($"{count} tracked server requests collected."));
+            return Ok(Content($"Successful {okCount},failed {count - okCount} out of {count} submitted probes."));
         }
 
         [HttpGet("availabilityprobes")]
@@ -164,30 +191,39 @@ namespace AngularSpaWebApi.Controllers
                     response = await RunAvailabilityTestAsync();
                 }
                 availability.Success = true;
-
+                stopwatch.Stop();
+                availability.Duration = stopwatch.Elapsed;
+                availability.Timestamp = DateTimeOffset.UtcNow;
+                client.TrackAvailability(availability);
                 stopwatch2.Stop();
-                client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch2.ElapsedTicks), "200", true);
+                client.TrackRequest(new RequestTelemetry()
+                {
+                    Name = "SynthTrackedAvailability",
+                    Timestamp = startRequest,
+                    Duration = new TimeSpan(stopwatch2.ElapsedTicks),
+                    ResponseCode = "200",
+                    Success = true
+                });
             }
 
             catch (Exception ex)
             {
                 availability.Message = ex.Message;
                 stopwatch2.Stop();
-                client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch2.ElapsedTicks), "500", false);
+                client.TrackRequest(new RequestTelemetry()
+                {
+                    Name = "SynthTrackedAvailability",
+                    Timestamp = startRequest,
+                    Duration = new TimeSpan(stopwatch2.ElapsedTicks),
+                    ResponseCode = "500",
+                    Success = false
+                });
                 throw;
             }
 
             finally
             {
-                stopwatch.Stop();
-                availability.Duration = stopwatch.Elapsed;
-                availability.Timestamp = DateTimeOffset.UtcNow;
-                client.TrackAvailability(availability);
                 client.Flush();
-                stopwatch2.Stop();
-                client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch2.ElapsedTicks), "200", true);
-
-
             }
             return Ok(Content(response));
 
