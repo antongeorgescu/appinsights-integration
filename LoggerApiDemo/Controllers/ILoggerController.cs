@@ -29,7 +29,7 @@ namespace LoggerApiDemo.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok($"ILogger controller instance created at {DateTime.Now}");
+            return Ok($"ILogger API instance started at {DateTime.Now}");
         }
 
         [HttpPost("log/info")]

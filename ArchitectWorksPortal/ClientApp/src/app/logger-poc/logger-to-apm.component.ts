@@ -84,8 +84,8 @@ export class LoggerToApmComponent {
     });
   }
 
-  onGenerateRequests(): void {
-    this.logsGeneratedResponse = "Working hard to generate synthetic server requests...";
+  onGenerateDependency(): void {
+    this.logsGeneratedResponse = "Working hard to generate synthetic dependency probes...";
     const valueInput = this.generateExCount?.nativeElement.value;
     this.http.get < HttpContent>(this.baseUrl + 'metricsutilities/serverrequests/' + valueInput).subscribe(result => {
       console.log(result);

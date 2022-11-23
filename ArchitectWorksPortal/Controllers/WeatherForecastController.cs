@@ -19,6 +19,12 @@ public class WeatherForecastController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet("connection")]
+    public IActionResult GetConnectionStatus()
+    {
+        return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
+    }
+
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {

@@ -24,7 +24,8 @@ namespace AngularSpaWebApi.Controllers
     {
         private readonly IConfiguration _configuration;
         
-        static internal string[] _trackedWebRequests;
+        static internal string[] _trackedWebDependencies;
+        static internal string[] _trackedWebAvailability;
         static internal string _telemetryConfigConnectionString;
         static internal string _quickPulseApiKey;
 
@@ -35,8 +36,9 @@ namespace AngularSpaWebApi.Controllers
             _telemetryConfigConnectionString = _configuration.GetSection($"AppInsightsMetrics:Telemetry.ConnectionString").Value;
             _quickPulseApiKey = _configuration.GetSection($"AppInsightsMetrics:QuickPulseModule.ApiKey").Value;
 
-            _trackedWebRequests = _configuration.GetSection($"AppInsightsMetrics:TrackWebDependencies").Get<string[]>();
-            
+            _trackedWebDependencies = _configuration.GetSection($"AppInsightsMetrics:TrackWebDependencies").Get<string[]>();
+            _trackedWebAvailability = _configuration.GetSection($"AppInsightsMetrics:TrackWebAvailability").Get<string[]>();
+
         }
 
         [HttpGet]
@@ -54,6 +56,10 @@ namespace AngularSpaWebApi.Controllers
         [HttpGet("serverrequests/{count}")]
         public async Task<ActionResult<string>> GenerateServerRequests(int count)
         {
+            var startRequest = new DateTime();
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             // Create a TelemetryConfiguration instance.
             TelemetryConfiguration config = TelemetryConfiguration.CreateDefault();
             config.ConnectionString = _telemetryConfigConnectionString;
@@ -87,31 +93,29 @@ namespace AngularSpaWebApi.Controllers
                 // These will be shown in Live Metrics.
                 // CPU/Memory Performance counter is also shown
                 // automatically without any additional steps.
-                var inx = rns.Next(0, _trackedWebRequests.Length-1);
+                var inx = rns.Next(0, _trackedWebDependencies.Length-1);
 
                 var startCall = new DateTime();
                 TimeSpan callDuration = TimeSpan.Zero;
                 try
                 {
-                    HttpResponseMessage response = await (new HttpClient()).GetAsync(_trackedWebRequests[inx]);
+                    HttpResponseMessage response = await (new HttpClient()).GetAsync(_trackedWebDependencies[inx]);
+                    stopwatch.Stop();
                     if (response.IsSuccessStatusCode)
                     {
-                        callDuration = (new DateTime()).Subtract(startCall);
-                        client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebRequests[inx], startCall, callDuration, true);
-                        client.TrackRequest("SynthRequests", startCall, callDuration, "200", true);
+                        client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, true);
+                        client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch.ElapsedTicks), "200", true);
                     }
                     else
                     {
-                        client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebRequests[inx], startCall, callDuration, false);
-                        callDuration = (new DateTime()).Subtract(startCall);
-                        client.TrackRequest("SynthRequests", startCall, callDuration, response.StatusCode.ToString(), true);
+                        client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, false);
+                        client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch.ElapsedTicks), response.StatusCode.ToString(), false);
                     }
                 }
                 catch (Exception ex)
                 {
-                    client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebRequests[inx], startCall, callDuration, false);
-                    callDuration = (new DateTime()).Subtract(startCall);
-                    client.TrackRequest("SynthRequests", startCall, callDuration, "500", true);
+                    client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, false);
+                    client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch.ElapsedTicks), "500", false);
                 }
 
                 //client
@@ -185,9 +189,9 @@ namespace AngularSpaWebApi.Controllers
             using (var httpClient = new HttpClient())
             {
                 Random rns = new Random();
-                _inx = rns.Next(0, MetricsUtilitiesController._trackedWebRequests.Length - 1);
-                await httpClient.GetStringAsync(_trackedWebRequests[_inx]);
-                return $"Probed for availability {_trackedWebRequests[_inx]}";
+                _inx = rns.Next(0, MetricsUtilitiesController._trackedWebAvailability.Length - 1);
+                await httpClient.GetStringAsync(_trackedWebAvailability[_inx]);
+                return $"Probed for availability {_trackedWebAvailability[_inx]}";
             }
         }
     }

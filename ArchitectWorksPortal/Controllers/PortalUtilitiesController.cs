@@ -9,9 +9,15 @@ namespace AngularSpaWebApi.Controllers
     [ApiController]
     public class PortalUtilitiesController : ControllerBase
     {
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok($"PortalUtilities API started at {DateTime.Now}");
+        }
+
         // GET: api/<PortalUtilitiesController>
         [HttpGet("applications")]
-        public IEnumerable<ApplicationInfo> Get()
+        public IEnumerable<ApplicationInfo> GetApps()
         {
             var apps = new List<ApplicationInfo>();
 
@@ -43,6 +49,12 @@ namespace AngularSpaWebApi.Controllers
                     break;
             }
             return Ok(diagramLink);
+        }
+
+        [HttpGet("connection")]
+        public IActionResult GetConnectionStatus()
+        {
+            return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
         }
 
         // POST api/<PortalUtilitiesController>
