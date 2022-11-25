@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -38,6 +39,12 @@ namespace AngularSpaWebApi.Controllers
             return apps;
         }
 
+        [HttpGet("redirectdocumentationappd")]
+        public ActionResult GetDocumentation()
+        {
+            return Redirect("https://docs.appdynamics.com/");
+        }
+        
         [HttpGet("designdiagram/{pocname}")]
         public ActionResult<Uri> GetDiagram(string pocname)
         {

@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { LoggerToApmComponent } from './logger-poc/logger-to-apm.component';
+import { DocumentationComponent } from './documentation/documentation.component';
 import { DemoMaterialModule } from './ng.material.module';
 //import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -22,7 +23,8 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    LoggerToApmComponent
+    LoggerToApmComponent,
+    DocumentationComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -37,6 +39,7 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'logger-to-apm', component: LoggerToApmComponent },
+      { path: 'documentation', component: DocumentationComponent },
     ])
   ],
   //providers: [
