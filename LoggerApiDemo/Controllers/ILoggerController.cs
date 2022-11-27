@@ -32,6 +32,12 @@ namespace LoggerApiDemo.Controllers
             return Ok($"ILogger API instance started at {DateTime.Now}");
         }
 
+        [HttpGet("connection")]
+        public IActionResult GetConnectionStatus()
+        {
+            return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
+        }
+
         [HttpPost("log/info")]
         public async Task<IActionResult> PostInfo([FromBody] LoggerEntry entry)
         {
