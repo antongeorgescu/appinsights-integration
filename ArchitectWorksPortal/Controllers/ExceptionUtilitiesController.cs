@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using ArchitectWorksPortal.SyntheticExceptionClasses;
 using System.Net.Http;
 using System;
+using ArchitectWorksPortal.Repositories;
 
 namespace AngularSpaWebApi.Controllers
 {
@@ -18,10 +19,12 @@ namespace AngularSpaWebApi.Controllers
         static internal List<string> HttpResponseStatusList;
         static internal List<Tuple<string, string, string>> CodeClassDescriptionList;
         static internal string _loggerURI;
+        private readonly IDatasetRepository _datasetRepo;
 
-        public ExceptionUtilitiesController(IConfiguration configuration)
+        public ExceptionUtilitiesController(IConfiguration configuration,IDatasetRepository datasetRepo)
         {
             _configuration = configuration;
+            _datasetRepo = datasetRepo;
 
             HttpResponseStatusList = _configuration.GetSection($"HttpResponse")
                                         .GetChildren()
@@ -62,9 +65,9 @@ namespace AngularSpaWebApi.Controllers
         }
 
         [HttpGet("generatemessage/ipsumlorem")]
-        public ActionResult<string> GenerateMessageIpsumLorem()
+        public async Task<ActionResult<string>> GenerateMessageIpsumLorem()
         {
-            var message = ExceptionServices.GenerateRandomLoremIpsumMessage();
+            var message = await (new ExceptionServices(_datasetRepo).GenerateRandomLoremIpsumMessageDb());
             return Ok(message);
         }
 

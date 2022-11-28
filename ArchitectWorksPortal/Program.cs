@@ -1,6 +1,9 @@
 using ArchitectWorksPortal.DAL;
-using Microsoft.EntityFrameworkCore;
 using ArchitectWorksPortal.Models;
+using ArchitectWorksPortal.Repositories;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 var AllowSpecificOrigins = "_myAllowSpecificOrigins";
 var AllowAnyOrigin = "_myAllowAnyOrigin";
@@ -21,7 +24,9 @@ builder.Services.AddCors(options =>
 
     options.AddPolicy(name: AllowAnyOrigin,policy => {policy.AllowAnyOrigin();});
 });
-builder.Services.AddDbContext<SynthDataContext>(opt => opt.UseInMemoryDatabase("SyntheticData"));
+builder.Services.AddSingleton<DapperContext>();
+builder.Services.AddScoped<IContentTypeRepository, ContentTypeRepository>();
+builder.Services.AddScoped<IDatasetRepository, DatasetRepository>();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen(c =>
 //{

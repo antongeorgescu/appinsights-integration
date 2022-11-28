@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Security;
 using AngularSpaWebApi.Controllers;
 using AngularSpaWebApi.Services;
+using ArchitectWorksPortal.Repositories;
+using ArchitectWorksPortal.Models;
 
 namespace AngularSpaWebApi.Logger
 {
@@ -16,6 +18,13 @@ namespace AngularSpaWebApi.Logger
         private string _description;
         private string _status;
         private dynamic _serialized = null;
+        private IDatasetRepository _datasetRepo;
+
+        public ThrowErrorRequest(IDatasetRepository? repository = null)
+        {
+            _datasetRepo = repository;
+        }
+
         public string Code 
         {
             get { return _code; }
@@ -55,10 +64,23 @@ namespace AngularSpaWebApi.Logger
         public ThrowErrorRequest Generate(int wordcount = 0)
         {
             Random res = new Random();
-            
+                        
             _message = ExceptionServices.GenerateRandomLoremIpsumMessage();
             var statusList = ExceptionUtilitiesController.HttpResponseStatusList;
             _status = statusList[res.Next(0, statusList.Count-1)];
+            _serialized = $"CLASS:{_class}|DESCRIPTION:{_description}|MESSAGE:{_message}|STATUS:{_status}";
+            return this;
+        }
+
+        public async Task<ThrowErrorRequest> GenerateDb(int wordcount = 0)
+        {
+            Random res = new Random();
+
+            var exserv = new ExceptionServices(_datasetRepo);
+            
+            _message = await exserv.GenerateRandomLoremIpsumMessageDb();
+            var statusList = ExceptionUtilitiesController.HttpResponseStatusList;
+            _status = statusList[res.Next(0, statusList.Count - 1)];
             _serialized = $"CLASS:{_class}|DESCRIPTION:{_description}|MESSAGE:{_message}|STATUS:{_status}";
             return this;
         }

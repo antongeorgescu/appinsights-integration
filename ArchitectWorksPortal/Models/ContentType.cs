@@ -1,4 +1,6 @@
-﻿namespace ArchitectWorksPortal.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ArchitectWorksPortal.Models
 {
     public enum Code
     {

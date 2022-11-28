@@ -1,11 +1,11 @@
 ﻿CREATE TABLE [dbo].[Dataset] (
-    [DatasetID]     INT           NOT NULL,
-    [ContentTypeID] SMALLINT      NOT NULL,
-    [Name]          VARCHAR (50)  NOT NULL,
-    [ContentText]   VARCHAR (MAX) NOT NULL,
-    [Description]   VARCHAR (500) NULL,
-    [OnLastUpdated] DATETIME      NOT NULL,
+    [DatasetID] [int] IDENTITY(1,1) NOT NULL,
+	[ContentTypeID] [smallint] NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+	[ContentText] [text] NOT NULL,
+	[Description] [varchar](500) NULL,
+	[LastUpdated] [datetime] DEFAULT (getdate()) NOT NULL,
     CONSTRAINT [PK_Dataset] PRIMARY KEY CLUSTERED ([DatasetID] ASC),
-    CONSTRAINT [FK_Dataset_ContentType] FOREIGN KEY ([ContentTypeID]) REFERENCES [dbo].[ContentType] ([ContentTypeID])
+	CONSTRAINT [FK_Dataset_ContentType] FOREIGN KEY ([ContentTypeID]) REFERENCES [dbo].[ContentType] ([ContentTypeID])
 );
 
