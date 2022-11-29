@@ -151,7 +151,7 @@ namespace AngularSpaWebApi.Controllers
         [HttpGet("exceptionlist/{count}/{framework}")]
         public async Task<ActionResult<string>> GetRandomFrameworkExceptions(int count,string framework)
         {
-            var exceptions = ExceptionServices.GenerateRandomErrorList(count,framework);
+            var exceptions = (new ExceptionServices(_datasetRepo)).GenerateRandomErrorList(count,framework).Result;
 
             // call Logger service to log exceptions
             using HttpClient client = new();
@@ -182,7 +182,7 @@ namespace AngularSpaWebApi.Controllers
         [HttpGet("exceptionlist/{count}")]
         public async Task<ActionResult<string>> GetRandomExceptions(int count)
         {
-            var exceptions = ExceptionServices.GenerateRandomErrorList(count);
+            var exceptions = (new ExceptionServices(_datasetRepo)).GenerateRandomErrorList(count).Result;
 
             // call Logger service to log exceptions
             using HttpClient client = new();

@@ -79,7 +79,7 @@ namespace AngularSpaWebApi.Services
             return messages[rnd.Next(0, messages.Count - 1)];
         }
 
-        public static List<ThrowErrorRequest> GenerateRandomErrorList(int count, string framework = null)
+        public async Task<List<ThrowErrorRequest>> GenerateRandomErrorList(int count, string framework = null)
         {
             var exlist = new List<ThrowErrorRequest>();
             var extypes = new [] { "netcore", "angular"};
@@ -99,14 +99,14 @@ namespace AngularSpaWebApi.Services
                 for (int i = 0; i < count; i++)
                 {
                     int index = res.Next(fxCodeClassDescriptionList.Count-1);
-                    var error = new ThrowErrorRequest()
+                    var error = new ThrowErrorRequest(datasetRepository)
                     {
                         Code = fxCodeClassDescriptionList[index].Item1,
                         Framework = framework,
                         Class = fxCodeClassDescriptionList[index].Item2,
                         Description = fxCodeClassDescriptionList[index].Item3,
                     };
-                    exlist.Add(error.Generate());
+                    exlist.Add(await error.GenerateDb());
                 }
             }
             else
@@ -119,71 +119,17 @@ namespace AngularSpaWebApi.Services
                 for (int i = 0; i < count; i++)
                 {
                     int index = res.Next(fxCodeClassDescriptionList.Count - 1);
-                    var error = new ThrowErrorRequest()
+                    var error = new ThrowErrorRequest(datasetRepository)
                     {
                         Code = fxCodeClassDescriptionList[index].Item1,
                         Framework = (fxCodeClassDescriptionList[index].Item1.Contains("NG") ? "angular" : "netcore"),
                         Class = fxCodeClassDescriptionList[index].Item2,
                         Description = fxCodeClassDescriptionList[index].Item3
                     };
-                    exlist.Add(error.Generate());
+                    exlist.Add(await error.GenerateDb());
                 }
             }
             
-            return exlist;
-        }
-
-        public async Task<List<ThrowErrorRequest>> GenerateRandomErrorListDb(int count, string framework = null)
-        {
-            var exlist = new List<ThrowErrorRequest>();
-            var extypes = new[] { "netcore", "angular" };
-
-            if (!String.IsNullOrEmpty(framework))
-            {
-                // an exception framework has been provided (either 'netcore' or 'angular')
-                if (!extypes.Contains(framework))
-                    // the provided type is incorrect
-                    return null;
-
-                Random res = new Random();
-
-                var fxCode = (framework == "netcore") ? "NET" : "NG";
-                var fxCodeClassDescriptionList = ExceptionUtilitiesController.CodeClassDescriptionList.Select(x => x).Where(x => x.Item1.Contains(fxCode)).ToList();
-
-                for (int i = 0; i < count; i++)
-                {
-                    int index = res.Next(fxCodeClassDescriptionList.Count - 1);
-                    var error = new ThrowErrorRequest(datasetRepository)
-                    {
-                        Code = fxCodeClassDescriptionList[index].Item1,
-                        Framework = framework,
-                        Class = fxCodeClassDescriptionList[index].Item2,
-                        Description = fxCodeClassDescriptionList[index].Item3,
-                    };
-                    exlist.Add(await error.GenerateDb());
-                }
-            }
-            else
-            {
-                // no exception framework has ben provided; will select randomly
-                Random res = new Random();
-
-                var fxCodeClassDescriptionList = ExceptionUtilitiesController.CodeClassDescriptionList.Select(x => x).ToList();
-
-                for (int i = 0; i < count; i++)
-                {
-                    int index = res.Next(fxCodeClassDescriptionList.Count - 1);
-                    var error = new ThrowErrorRequest(datasetRepository)
-                    {
-                        Code = fxCodeClassDescriptionList[index].Item1,
-                        Framework = (fxCodeClassDescriptionList[index].Item1.Contains("NG") ? "angular" : "netcore"),
-                        Class = fxCodeClassDescriptionList[index].Item2,
-                        Description = fxCodeClassDescriptionList[index].Item3
-                    };
-                    exlist.Add(await error.GenerateDb());
-                }
-            }
-
             return exlist;
         }
 

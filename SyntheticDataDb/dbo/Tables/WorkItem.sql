@@ -1,0 +1,19 @@
+﻿CREATE TABLE [dbo].[WorkItem](
+	[WorkID] [smallint] NOT NULL,
+	[TypeID] [smallint] NOT NULL,
+	[Title] [varchar](50) NOT NULL,
+	[Description] [varchar](1000) NULL,
+	[Notes] [varchar](max) NULL,
+ CONSTRAINT [PK_WorkItem] PRIMARY KEY CLUSTERED 
+(
+	[WorkID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[WorkItem]  WITH CHECK ADD  CONSTRAINT [FK_WorkItem_WorkType] FOREIGN KEY([TypeID])
+REFERENCES [dbo].[WorkType] ([TypeID])
+GO
+
+ALTER TABLE [dbo].[WorkItem] CHECK CONSTRAINT [FK_WorkItem_WorkType]
+GO
