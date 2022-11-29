@@ -1,4 +1,5 @@
 ﻿using AngularSpaWebApi.Classes;
+using ArchitectWorksPortal.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AngularSpaWebApi.Controllers;
@@ -38,17 +39,17 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet("appinfo")]
-    public IEnumerable<ApplicationInfo> GetAppInfo()
+    public IEnumerable<Workitem> GetAppInfo()
     {
-        var apps = new List<ApplicationInfo>();
-        apps.Add(new ApplicationInfo()
+        var apps = new List<Workitem>();
+        apps.Add(new Workitem()
         {
             Type = "POC",
             Title = ".NET Logger integration with APM",
             Description = ".NET Nlog Logger integration with Application Performance Monitoring (APM)",
             Notes = "Scope confined to Azure Monitor, Cosmos Db, and App Dynamics"
         });
-        apps.Add(new ApplicationInfo()
+        apps.Add(new Workitem()
         {
             Type = "Hackathon Submission",
             Title = "Resume Automatic Parser (RAP)",

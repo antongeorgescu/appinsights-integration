@@ -27,6 +27,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddScoped<IContentTypeRepository, ContentTypeRepository>();
 builder.Services.AddScoped<IDatasetRepository, DatasetRepository>();
+builder.Services.AddScoped<IPortalRepository, PortalRepository>();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen(c =>
 //{
