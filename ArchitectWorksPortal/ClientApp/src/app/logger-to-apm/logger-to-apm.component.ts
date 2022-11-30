@@ -23,6 +23,7 @@ export class LoggerToApmComponent {
 
   selectedFile?: string;
   public logContent?: string = "";
+  selectedAPM: string = "appinsights";
 
   @ViewChild('generateExCount') generateExCount?: ElementRef;
   @ViewChild('logGenerationResultRef') logGenerationResultRef?: ElementRef;
@@ -61,6 +62,12 @@ export class LoggerToApmComponent {
     }, error => console.error(error));
   }
 
+  //event handler for the select element's change event
+  onSelectChangeHandler(event: any) {
+    //update the ui
+    this.selectedAPM = event.target.value;
+  }
+
   onSelect(file: string): void {
     this.logsGeneratedResponse = "";
     this.selectedFile = file;
@@ -73,21 +80,27 @@ export class LoggerToApmComponent {
   onGenerateExceptions(): void {
     this.logsGeneratedResponse = "Working hard to generate synthetic exceptions...";
     const valueInput = this.generateExCount?.nativeElement.value;
-    this.http.get(this.baseUrl + 'exceptionutilities/exceptionlist/' + valueInput).subscribe(result => {
+
+    var apmName = this.selectedAPM == "appinsights" ? "apm/appinsights" : "apm/appdynamics";
+
+    this.http.get(this.baseUrl + `exceptionutilities/exceptionlist/${valueInput}/${apmName}`).subscribe(result => {
       console.log(result);
       //this.logGenerationResultLabel?.style.color. = "black";
       this.logsGeneratedResponse = 'Ok:' + result;
     }, error => {
       console.error(error);
       //this.logGenerationResultLabel?.style.color = "red";
-      this.logsGeneratedResponse = 'Error:' + error.message;
+      this.logsGeneratedResponse = 'Error:' + error.message + '*' + error.error.status
     });
   }
 
   onGenerateDependency(): void {
     this.logsGeneratedResponse = "Working hard to generate synthetic dependency probes...";
     const valueInput = this.generateExCount?.nativeElement.value;
-    this.http.get < HttpContent>(this.baseUrl + 'metricsutilities/serverrequests/' + valueInput).subscribe(result => {
+
+    var apmName = this.selectedAPM == "appinsights" ? "apm/appinsights" : "apm/appdynamics";
+
+    this.http.get<HttpContent>(this.baseUrl + `metricsutilities/serverrequests/${valueInput}/${apmName}`).subscribe(result => {
       console.log(result);
       //this.logGenerationResultLabel?.style.color. = "black";
       this.logsGeneratedResponse = 'Ok:' + result.content;
@@ -102,15 +115,17 @@ export class LoggerToApmComponent {
     this.logsGeneratedResponse = "Working hard to generate synthetic availability probes...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
+    var apmName = this.selectedAPM == "appinsights" ? "apm/appinsights" : "apm/appdynamics"; 
+
     for (let i = 0; i < valueInput; i++) {
-      this.http.get<HttpContent>(this.baseUrl + 'metricsutilities/availabilityprobes').subscribe(result => {
+      this.http.get<HttpContent>(this.baseUrl + `metricsutilities/availabilityprobes/${apmName}`).subscribe(result => {
         console.log(result);
         //this.logGenerationResultLabel?.style.color. = "black";
-        this.logsGeneratedResponse = `[Call ${i}] Ok: + ${result.content}`;
+        this.logsGeneratedResponse = `[Call ${i}] ${result.content}`;
       }, error => {
         console.error(error);
         //this.logGenerationResultLabel?.style.color = "red";
-        this.logsGeneratedResponse = `[Call ${i}] Error: + ${error.message}`;
+        this.logsGeneratedResponse = `[Call ${i}] ${error.message}`;
       });
 
       await new Promise(f => setTimeout(f, 1000));

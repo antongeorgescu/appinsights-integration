@@ -24,7 +24,7 @@ export class HomeComponent {
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
     this.http = http;
-    this.http.get<ApplicationInfo[]>(baseUrl + 'portalutilities/applications').subscribe(result => {
+    this.http.get<ApplicationInfo[]>(baseUrl + 'portalutilities/applications/db').subscribe(result => {
       this.dataSource = result;
     }, error => console.error(error));
   }

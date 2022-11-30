@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,26 +29,30 @@ namespace AngularSpaWebApi.Controllers
             return Ok($"PortalUtilities API started at {DateTime.Now}");
         }
 
-        // GET: api/<PortalUtilitiesController>
-        [HttpGet("applications")]
+        [HttpGet("applications/db")]
         public async Task<IEnumerable<Workitem>> GetApps()
         {
-            //var apps = new List<Workitem>();
-            //using (StreamReader r = new StreamReader("Data/works.json"))
-            //{
-            //    string json = r.ReadToEnd();
-            //    List<ApplicationInfo>? works = JsonConvert.DeserializeObject<List<ApplicationInfo>>(json);
-            //    foreach (var work in works)
-            //        apps.Add(new ApplicationInfo()
-            //        {
-            //            Type = work.Type,
-            //            Title = work.Title,
-            //            Description = work.Description,
-            //            Notes = work.Notes
-            //        });
-
-            //}
             var apps = await _portalRepo.GetWorkitems();
+            return apps;
+        }
+
+        [HttpGet("applications/text")]
+        public IEnumerable<Workitem> GetAppsText()
+        {
+            var apps = new List<Workitem>();
+            using (StreamReader r = new ("Data/works.json"))
+            {
+                string json = r.ReadToEnd();
+                List<Workitem>? works = JsonConvert.DeserializeObject<List<Workitem>>(json);
+                apps.AddRange(from work in works
+                              select new Workitem()
+                              {
+                                  Type = work.Type,
+                                  Title = work.Title,
+                                  Description = work.Description,
+                                  Notes = work.Notes
+                              });
+            }
             return apps;
         }
 

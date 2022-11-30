@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.Azure.Cosmos.Serialization.HybridRow;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,12 @@ namespace LoggerApiDemo.Controllers
     public class ILoggerController : ControllerBase
     {
         protected readonly ILogger<ILoggerController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public ILoggerController([NotNull] ILogger<ILoggerController> logger)
+        public ILoggerController([NotNull] ILogger<ILoggerController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -36,6 +39,17 @@ namespace LoggerApiDemo.Controllers
         public IActionResult GetConnectionStatus()
         {
             return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
+        }
+
+        [HttpGet("apmactive/{apmname}")]
+        public IActionResult GetIsApmActive(string apmname)
+        {
+            // check if required APM is active in appsettings.json
+            var apmName = (apmname == "appinsights") ? "ApplicationInsights" : "AppDynamics";
+            if (_configuration.GetSection($"Logging:{apmName}").GetChildren().Count() == 0)
+                return BadRequest(new { status = $"{apmName} is inactive" });
+
+            return Ok(new { status = $"{apmName} is active" });
         }
 
         [HttpPost("log/info")]

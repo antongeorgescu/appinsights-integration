@@ -15,6 +15,9 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using System.Diagnostics;
+using Azure;
+using Microsoft.IdentityModel.Abstractions;
+using Newtonsoft.Json;
 
 namespace AngularSpaWebApi.Controllers
 {
@@ -24,10 +27,10 @@ namespace AngularSpaWebApi.Controllers
     {
         private readonly IConfiguration _configuration;
         
-        static internal string[] _trackedWebDependencies;
-        static internal string[] _trackedWebAvailability;
-        static internal string _telemetryConfigConnectionString;
-        static internal string _quickPulseApiKey;
+        static internal string[]? _trackedWebDependencies;
+        static internal string[]? _trackedWebAvailability;
+        static internal string? _telemetryConfigConnectionString;
+        static internal string? _quickPulseApiKey;
 
         public MetricsUtilitiesController(IConfiguration configuration)
         {
@@ -53,111 +56,83 @@ namespace AngularSpaWebApi.Controllers
             return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
         }
 
-        [HttpGet("serverrequests/{count}")]
-        public async Task<ActionResult<string>> GenerateServerRequests(int count)
+        [HttpGet("serverrequests/{count}/apm/appinsights")]
+        public async Task<ActionResult<string>> GenerateServerRequestsAppInsights(int count)
         {
-            var startRequest = new DateTime();
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             // Create a TelemetryConfiguration instance.
-            TelemetryConfiguration config = TelemetryConfiguration.CreateDefault();
+            TelemetryConfiguration? config = TelemetryConfiguration.CreateDefault();
             config.ConnectionString = _telemetryConfigConnectionString;
-            QuickPulseTelemetryProcessor? quickPulseProcessor = null;
-            config.DefaultTelemetrySink.TelemetryProcessorChainBuilder
-                .Use((next) =>
-                {
-                    quickPulseProcessor = new QuickPulseTelemetryProcessor(next);
-                    return quickPulseProcessor;
-                })
-                .Build();
-
-            var quickPulseModule = new QuickPulseTelemetryModule();
-
-            // Secure the control channel.
-            // This is optional, but recommended.
-            quickPulseModule.AuthenticationApiKey = _quickPulseApiKey;
-            quickPulseModule.Initialize(config);
-            quickPulseModule.RegisterTelemetryProcessor(quickPulseProcessor);
 
             // Create a TelemetryClient instance. It is important
             // to use the same TelemetryConfiguration here as the one
             // used to set up Live Metrics.
-            TelemetryClient client = new TelemetryClient(config);
+            TelemetryClient? client = new TelemetryClient(config);
 
-            // This sample runs indefinitely. Replace with actual application logic.
-            Random rns = new Random();
-            int okCount = 0;
-            for (int i = 0; i < count; i++)
+            using (var opSynthRequest = client.StartOperation<RequestTelemetry>("SynthRequest"))
             {
-                // Send dependency and request telemetry.
-                // These will be shown in Live Metrics.
-                // CPU/Memory Performance counter is also shown
-                // automatically without any additional steps.
-                var inx = rns.Next(0, _trackedWebDependencies.Length-1);
+                QuickPulseTelemetryProcessor? quickPulseProcessor = null;
+                config.DefaultTelemetrySink.TelemetryProcessorChainBuilder
+                    .Use((next) =>
+                    {
+                        quickPulseProcessor = new QuickPulseTelemetryProcessor(next);
+                        return quickPulseProcessor;
+                    })
+                    .Build();
 
-                var startCall = new DateTime();
-                TimeSpan callDuration = TimeSpan.Zero;
-                
-                try
+                var quickPulseModule = new QuickPulseTelemetryModule();
+
+                // Secure the control channel.
+                // This is optional, but recommended.
+                quickPulseModule.AuthenticationApiKey = _quickPulseApiKey;
+                quickPulseModule.Initialize(config);
+                quickPulseModule.RegisterTelemetryProcessor(quickPulseProcessor);
+
+                // This sample runs indefinitely. Replace with actual application logic.
+                Random rns = new Random();
+                int okCount = 0;
+                for (int i = 0; i < count; i++)
                 {
-                    HttpResponseMessage response = await (new HttpClient()).GetAsync(_trackedWebDependencies[inx]);
-                    stopwatch.Stop();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, true);
+                    // Send dependency and request telemetry.
+                    // These will be shown in Live Metrics.
+                    // CPU/Memory Performance counter is also shown
+                    // automatically without any additional steps.
+                    var inx = rns.Next(0, _trackedWebDependencies.Length - 1);
 
-                        client.TrackRequest(new RequestTelemetry()
-                        {
-                            Name = "SynthTrackedDependencies",
-                            Timestamp = DateTime.UtcNow,
-                            Duration = new TimeSpan(stopwatch.ElapsedTicks),
-                            ResponseCode = "200",
-                            Success = true
-                        });
-                        
-                        client.TrackRequest("SynthRequests", startRequest, new TimeSpan(stopwatch.ElapsedTicks), "200", true);
-                        okCount++;
-                    }
-                    else
+                    using (var opSynthTrackDepends = client.StartOperation<RequestTelemetry>("SynthTrackedDependencies"))
                     {
-                        client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, false);
-                        client.TrackRequest(new RequestTelemetry()
+                        opSynthTrackDepends.Telemetry.Properties["target"] = _trackedWebDependencies[inx];
+                        try
                         {
-                            Name = "SynthTrackedDependencies",
-                            Timestamp = DateTime.UtcNow,
-                            Duration = new TimeSpan(stopwatch.ElapsedTicks),
-                            ResponseCode = "500",
-                            Success = false
-                        });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    client.TrackDependency("SynthTrackedDependencies", "target", _trackedWebDependencies[inx], startCall, callDuration, false);
-                    client.TrackRequest(new RequestTelemetry()
-                    {
-                        Name = "SynthTrackedDependencies",
-                        Timestamp = DateTime.UtcNow,
-                        Duration = new TimeSpan(stopwatch.ElapsedTicks),
-                        ResponseCode = "500",
-                        Success = false
-                    });
-                }
+                            HttpResponseMessage response = await (new HttpClient()).GetAsync(_trackedWebDependencies[inx]);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                opSynthTrackDepends.Telemetry.Success = true;
+                                okCount++;
+                            } 
+                            else
+                                opSynthTrackDepends.Telemetry.Success = false;
 
-                //client
-                Task.Delay(1000).Wait();
+                        }
+                        catch (Exception ex)
+                        {
+                            opSynthTrackDepends.Telemetry.Success = false;
+                        }
+                    }
+                    
+                    //client
+                    Task.Delay(1000).Wait();
+                }
+                opSynthRequest.Telemetry.Properties["OK pings"] = okCount.ToString();
+                opSynthRequest.Telemetry.Properties["Error pings"] = (count - okCount).ToString();
+
+                opSynthRequest.Telemetry.Success = true;
+                return Ok(Content($"Successful {okCount},failed {count - okCount} out of {count} submitted probes."));
             }
-            return Ok(Content($"Successful {okCount},failed {count - okCount} out of {count} submitted probes."));
         }
 
-        [HttpGet("availabilityprobes")]
-        public async Task<ActionResult> GenerateAvailabilityProbes()
+        [HttpGet("availabilityprobes/apm/appinsights")]
+        public async Task<ActionResult> GenerateAvailabilityProbesAppInsights()
         {
-            var startRequest = new DateTime();
-            var stopwatch2 = new Stopwatch();
-            stopwatch2.Start();
-
             // Create a TelemetryConfiguration instance.
             TelemetryConfiguration config = TelemetryConfiguration.CreateDefault();
             config.ConnectionString = _telemetryConfigConnectionString;
@@ -167,66 +142,46 @@ namespace AngularSpaWebApi.Controllers
             // to use the same TelemetryConfiguration here as the one
             // used to set up Live Metrics.
             TelemetryClient client = new TelemetryClient(config);
-
-            var availability = new AvailabilityTelemetry
-            {
-                Name = "ProbeAvailabilityOfSynthURL",
-                RunLocation = "Central US",
-                Success = false,
-            };
-
-            availability.Context.Operation.ParentId = Activity.Current?.SpanId.ToString();
-            availability.Context.Operation.Id = Activity.Current?.RootId;
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             string response;
-            try
+            using (var opSynthRequest = client.StartOperation<RequestTelemetry>("SynthAvailabilityRequest"))
             {
-                using (var activity = new Activity("AvailabilityContext"))
+                var availabilityTelemetry = new AvailabilityTelemetry
                 {
-                    activity.Start();
-                    availability.Id = Activity.Current?.SpanId.ToString();
-                    // Run business logic 
-                    response = await RunAvailabilityTestAsync();
+                    Id = Guid.NewGuid().ToString("N"),
+                    Name = "ProbeAvailabilityOfSynthURL",
+                    RunLocation = "Central US",
+                    Success = false,
+                };
+
+                availabilityTelemetry.Context.Operation.ParentId = Activity.Current?.SpanId.ToString();
+                availabilityTelemetry.Context.Operation.Id = Activity.Current?.RootId;
+                
+                try
+                {
+                    var result = await RunAvailabilityTestAsync();
+                    response = $"{result}";
+                    availabilityTelemetry.Success = true;
                 }
-                availability.Success = true;
-                stopwatch.Stop();
-                availability.Duration = stopwatch.Elapsed;
-                availability.Timestamp = DateTimeOffset.UtcNow;
-                client.TrackAvailability(availability);
-                stopwatch2.Stop();
-                client.TrackRequest(new RequestTelemetry()
+                catch (Exception ex)
                 {
-                    Name = "SynthTrackedAvailability",
-                    Timestamp = startRequest,
-                    Duration = new TimeSpan(stopwatch2.ElapsedTicks),
-                    ResponseCode = "200",
-                    Success = true
-                });
-            }
+                    availabilityTelemetry.Message = ex.Message;
 
-            catch (Exception ex)
-            {
-                availability.Message = ex.Message;
-                stopwatch2.Stop();
-                client.TrackRequest(new RequestTelemetry()
+                    var exceptionTelemetry = new ExceptionTelemetry(ex);
+                    exceptionTelemetry.Context.Operation.Id = availabilityTelemetry.Id;
+                    exceptionTelemetry.Properties.Add("TestName", availabilityTelemetry.Name);
+                    exceptionTelemetry.Properties.Add("TestLocation", availabilityTelemetry.RunLocation);
+                    client.TrackException(exceptionTelemetry);
+
+                    response = $"Error:{ex.Message}";
+                }
+
+                finally
                 {
-                    Name = "SynthTrackedAvailability",
-                    Timestamp = startRequest,
-                    Duration = new TimeSpan(stopwatch2.ElapsedTicks),
-                    ResponseCode = "500",
-                    Success = false
-                });
-                throw;
+                    client.Flush();
+                }
+                opSynthRequest.Telemetry.Success = true;
+                return Ok(Content(response));
             }
-
-            finally
-            {
-                client.Flush();
-            }
-            return Ok(Content(response));
-
 
         }
 
@@ -236,9 +191,11 @@ namespace AngularSpaWebApi.Controllers
             using (var httpClient = new HttpClient())
             {
                 Random rns = new Random();
-                _inx = rns.Next(0, MetricsUtilitiesController._trackedWebAvailability.Length - 1);
-                await httpClient.GetStringAsync(_trackedWebAvailability[_inx]);
-                return $"Probed for availability {_trackedWebAvailability[_inx]}";
+                _inx = rns.Next(0, _trackedWebAvailability.Length - 1);
+                var result = await httpClient.GetAsync(_trackedWebAvailability[_inx]);
+                //var message = result.Content.ReadAsStringAsync().Result;
+                
+                return $"{result.StatusCode}:{_trackedWebAvailability[_inx]}";
             }
         }
     }

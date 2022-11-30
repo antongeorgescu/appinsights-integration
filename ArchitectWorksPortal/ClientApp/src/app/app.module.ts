@@ -9,7 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { LoggerToApmComponent } from './logger-poc/logger-to-apm.component';
+import { LoggerToApmComponent } from './logger-to-apm/logger-to-apm.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { DemoMaterialModule } from './ng.material.module';
 //import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
