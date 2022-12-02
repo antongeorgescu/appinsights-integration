@@ -9,6 +9,11 @@ using System.Net.Http;
 using System;
 using ArchitectWorksPortal.Repositories;
 using ArchitectWorksPortal.UtilityClasses;
+using Extensions = ArchitectWorksPortal.UtilityClasses.Extensions;
+using System.Web.Http;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 
 namespace AngularSpaWebApi.Controllers
 {
@@ -232,13 +237,14 @@ namespace AngularSpaWebApi.Controllers
 
         [HttpGet("controller/apm/appinsights")]
         [AppInsightHandleException]
+        
         public ActionResult GetRandomExceptionsToAppInsights()
         {
             List<ThrowErrorRequest>? exceptions = (new ExceptionServices(_datasetRepo)).GenerateRandomErrorList(15).Result;
 
             Random rnd = new();
 
-            if (exceptions != null)
+            if (Extensions.IsNotNull(exceptions))
             {
                 var inx = rnd.Next(exceptions.Count - 1);
                 var ex = exceptions[inx];
@@ -249,12 +255,11 @@ namespace AngularSpaWebApi.Controllers
         }
 
         [HttpGet("controller/apm/appdynamics")]
-        [AppDynamicsHandleException]
+        //[AppDynamicsHandleException]
+        [NotImplExceptionFilter]
         public ActionResult GetRandomExceptionsToAppDynamics()
         {
-            var okResponse = new HttpResponseMessage();
-            okResponse.Content = JsonContent.Create($"This feature is not implemented yet!");
-            return Ok(okResponse.Content.ReadAsStringAsync().Result);
+            throw new NotImplementedException("This feature is not implemented");
         }
 
         [HttpGet("logfiles")]
