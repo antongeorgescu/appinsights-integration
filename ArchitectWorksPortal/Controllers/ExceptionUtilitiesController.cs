@@ -8,11 +8,13 @@ using ArchitectWorksPortal.SyntheticExceptionClasses;
 using System.Net.Http;
 using System;
 using ArchitectWorksPortal.Repositories;
+using ArchitectWorksPortal.UtilityClasses;
 
 namespace AngularSpaWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [AppInsightHandleException]
     public class ExceptionUtilitiesController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -148,8 +150,8 @@ namespace AngularSpaWebApi.Controllers
             return Ok(errorRequest.Serialized);
         }
 
-        [HttpGet("exceptionlist/{count}/framework/{framework}/apm/{appname}")]
-        public async Task<ActionResult<string>> GetRandomFrameworkExceptions(int count,string framework,string appname)
+        [HttpGet("loggerservice/{count}/framework/{framework}/apm/{appname}")]
+        public async Task<ActionResult<string>> GetRandomFrameworkExceptionsToLogger(int count,string framework,string appname)
         {
             var exceptions = (new ExceptionServices(_datasetRepo)).GenerateRandomErrorList(count,framework).Result;
 
@@ -183,8 +185,8 @@ namespace AngularSpaWebApi.Controllers
             return Ok(okResponse.Content.ReadAsStringAsync().Result);
         }
 
-        [HttpGet("exceptionlist/{count}/apm/{appname}")]
-        public async Task<ActionResult<string>> GetRandomExceptions(int count,string appname)
+        [HttpGet("loggerservice/{count}/apm/appinsights")]
+        public async Task<ActionResult<string>> GetRandomExceptionsToLoggerAppInsights(int count)
         {
             var exceptions = (new ExceptionServices(_datasetRepo)).GenerateRandomErrorList(count).Result;
 
@@ -195,7 +197,7 @@ namespace AngularSpaWebApi.Controllers
                 new MediaTypeWithQualityHeaderValue("application/text"));
             client.DefaultRequestHeaders.Add("User-Agent", "Synthetic Exception Generator");
 
-            using HttpResponseMessage response0 = await client.GetAsync($"{_loggerURI}/apmactive/{appname}");
+            using HttpResponseMessage response0 = await client.GetAsync($"{_loggerURI}/apmactive/appinsights");
             if (!response0.StatusCode.Equals(HttpStatusCode.OK))
                 return BadRequest(response0.Content.ReadAsStringAsync().Result);
 
@@ -217,6 +219,41 @@ namespace AngularSpaWebApi.Controllers
 
             var okResponse = new HttpResponseMessage();
             okResponse.Content = JsonContent.Create($"{count} synthetic logs have been generated.");
+            return Ok(okResponse.Content.ReadAsStringAsync().Result);
+        }
+
+        [HttpGet("loggerservice/{count}/apm/appdynamics")]
+        public async Task<ActionResult<string>> GetRandomExceptionsToLoggerAppDynamics(int count)
+        {
+            var okResponse = new HttpResponseMessage();
+            okResponse.Content = JsonContent.Create($"This feature is not implemented yet!");
+            return Ok(okResponse.Content.ReadAsStringAsync().Result);
+        }
+
+        [HttpGet("controller/apm/appinsights")]
+        [AppInsightHandleException]
+        public ActionResult GetRandomExceptionsToAppInsights()
+        {
+            List<ThrowErrorRequest>? exceptions = (new ExceptionServices(_datasetRepo)).GenerateRandomErrorList(15).Result;
+
+            Random rnd = new();
+
+            if (exceptions != null)
+            {
+                var inx = rnd.Next(exceptions.Count - 1);
+                var ex = exceptions[inx];
+
+                throw new Exception($"TYPE*{ex.Code}*CLASS*{ex.Class}*MESSAGE*{ex.Message}");
+            }
+            return Ok();
+        }
+
+        [HttpGet("controller/apm/appdynamics")]
+        [AppDynamicsHandleException]
+        public ActionResult GetRandomExceptionsToAppDynamics()
+        {
+            var okResponse = new HttpResponseMessage();
+            okResponse.Content = JsonContent.Create($"This feature is not implemented yet!");
             return Ok(okResponse.Content.ReadAsStringAsync().Result);
         }
 
@@ -263,5 +300,7 @@ namespace AngularSpaWebApi.Controllers
             public string Name { get; set; }
             public string Path { get; set; }
         }
+
+        
     }
 }

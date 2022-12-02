@@ -77,13 +77,13 @@ export class LoggerToApmComponent {
     }, error => console.error(error));
   }
 
-  onGenerateExceptions(): void {
+  onGenerateExceptionsToLogger(): void {
     this.logsGeneratedResponse = "Working hard to generate synthetic exceptions...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
     var apmName = this.selectedAPM == "appinsights" ? "apm/appinsights" : "apm/appdynamics";
 
-    this.http.get(this.baseUrl + `exceptionutilities/exceptionlist/${valueInput}/${apmName}`).subscribe(result => {
+    this.http.get(this.baseUrl + `exceptionutilities/loggerservice/${valueInput}/${apmName}`).subscribe(result => {
       console.log(result);
       //this.logGenerationResultLabel?.style.color. = "black";
       this.logsGeneratedResponse = 'Ok:' + result;
@@ -92,6 +92,27 @@ export class LoggerToApmComponent {
       //this.logGenerationResultLabel?.style.color = "red";
       this.logsGeneratedResponse = 'Error:' + error.message + '*' + error.error.status
     });
+  }
+
+  async onGenerateExceptionsFromController() {
+    this.logsGeneratedResponse = "Working hard to generate synthetic exceptions...";
+    const valueInput = this.generateExCount?.nativeElement.value;
+
+    var apmName = this.selectedAPM == "appinsights" ? "apm/appinsights" : "apm/appdynamics";
+
+    for (let i = 0; i < valueInput; i++) {
+      this.http.get<HttpContent>(this.baseUrl + `exceptionutilities/controller/${apmName}`).subscribe(result => {
+        console.log(result);
+        //this.logGenerationResultLabel?.style.color. = "black";
+        this.logsGeneratedResponse = `[Call ${i}] ${result.content}`;
+      }, error => {
+        console.error(error);
+        //this.logGenerationResultLabel?.style.color = "red";
+        this.logsGeneratedResponse = `[Call ${i}] ${error.message}`;
+      });
+
+      await new Promise(f => setTimeout(f, 1000));
+    }
   }
 
   onGenerateDependency(): void {

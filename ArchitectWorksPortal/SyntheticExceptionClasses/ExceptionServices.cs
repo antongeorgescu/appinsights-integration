@@ -79,7 +79,7 @@ namespace AngularSpaWebApi.Services
             return messages[rnd.Next(0, messages.Count - 1)];
         }
 
-        public async Task<List<ThrowErrorRequest>> GenerateRandomErrorList(int count, string framework = null)
+        public async Task<List<ThrowErrorRequest>?> GenerateRandomErrorList(int count, string framework = null)
         {
             var exlist = new List<ThrowErrorRequest>();
             var extypes = new [] { "netcore", "angular"};

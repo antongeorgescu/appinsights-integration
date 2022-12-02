@@ -13,7 +13,8 @@
       <div class="col-xs-2">
         <input type="text" size="1" value="10" class="form-control-sm" #generateExCount />
       </div>
-      <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptions();" style="border:solid;border-width:1px;border-color:white;">Generate Application Logs</button>
+      <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptionsToLogger();" style="border:solid;border-width:1px;border-color:white;">Generate Logs with Logger Service</button>
+      <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptionsFromController();" style="border:solid;border-width:1px;border-color:white;">Generate Logs from Controller</button>
       <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateDependency();" style="border:solid;border-width:1px;border-color:white;">Generate Dependency Probes</button>
       <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateAvailability();" style="border:solid;border-width:1px;border-color:white;">Generate Availability Probes</button>
       <button class="btn btn-primary" type="button" (click)="exceptionListCollapse.toggle()" style="border:solid;border-width:1px;border-color:white;"

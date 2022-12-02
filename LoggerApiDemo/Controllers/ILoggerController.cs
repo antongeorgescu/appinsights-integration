@@ -1,4 +1,6 @@
 ﻿using LoggerApiDemo.LoggerClasses;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.Azure.Cosmos.Serialization.HybridRow;
@@ -99,6 +101,17 @@ namespace LoggerApiDemo.Controllers
                                 exception: new Exception($"*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
                                 message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
+
+            // save "error" severity on ApplicationInsights if configured
+            if (_configuration.GetSection($"Logging:ApplicationInsights").GetChildren().Count() > 0)
+            {
+                TelemetryClient appInsClient = new();
+                appInsClient.TrackException(new ExceptionTelemetry()
+                {
+                    SeverityLevel = SeverityLevel.Error,
+                    Message = $"ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
+                });
+            }
             return Ok($"ERROR log saved on {DateTime.Now}");
         }
 
@@ -124,6 +137,18 @@ namespace LoggerApiDemo.Controllers
                                 exception: new Exception($"*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
                                 message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
+
+            // save "critical" severity on ApplicationInsights if configured
+            if (_configuration.GetSection($"Logging:ApplicationInsights").GetChildren().Count() > 0)
+            {
+                TelemetryClient appInsClient = new();
+                appInsClient.TrackException(new ExceptionTelemetry()
+                {
+                    SeverityLevel = SeverityLevel.Critical,
+                    Message = $"ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
+                });
+            }
+            
             return Ok($"CRITICAL log saved on {DateTime.Now}");
         }
 

@@ -4,6 +4,8 @@ using ArchitectWorksPortal.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System.Web.Http;
+using ArchitectWorksPortal.UtilityClasses;
 
 var AllowSpecificOrigins = "_myAllowSpecificOrigins";
 var AllowAnyOrigin = "_myAllowAnyOrigin";
@@ -11,7 +13,6 @@ var AllowAnyOrigin = "_myAllowAnyOrigin";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>
 {
@@ -28,12 +29,13 @@ builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddScoped<IContentTypeRepository, ContentTypeRepository>();
 builder.Services.AddScoped<IDatasetRepository, DatasetRepository>();
 builder.Services.AddScoped<IPortalRepository, PortalRepository>();
+builder.Services.AddScoped<AppInsightHandleExceptionAttribute>();
+builder.Services.AddScoped<AppDynamicsHandleExceptionAttribute>();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen(c =>
 //{
 //    c.SwaggerDoc("v1", new() { Title = "TodoApi", Version = "v1" });
 //});
-
 
 var app = builder.Build();
 
