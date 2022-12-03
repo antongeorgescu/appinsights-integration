@@ -2,21 +2,10 @@
   <div>
     <div class="input-group input-group-sm">
       <span class="input-group-text input-group-sizing-s"><b>Select Application Performance Monitoring (APM):</b></span>
-      <select class="form-select form-select-sm" (change)="onSelectChangeHandler($event)" style="width:300px">
+      <select class="form-select form-select-sm" (change)="onSelectApmHandler($event)">
         <option value="appinsights" selected>Azure Monitor - Application Insights</option>
         <option value="appdynamics">App Dynamics</option>
       </select>
-    </div>
-    <div class="input-group input-group-sm mb-7">
-      <p *ngIf="!exceptionlist"><em>Loading...</em></p>
-      <span class="input-group-text input-group-sizing-s" style="width:300px"><b># Random synthetic events to generate:</b></span>
-      <div class="col-xs-2">
-        <input type="text" size="1" value="10" class="form-control-sm" #generateExCount />
-      </div>
-      <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptionsToLogger();" style="border:solid;border-width:1px;border-color:white;">Generate Logs with Logger Service</button>
-      <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateExceptionsFromController();" style="border:solid;border-width:1px;border-color:white;">Generate Logs from Controller</button>
-      <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateDependency();" style="border:solid;border-width:1px;border-color:white;">Generate Dependency Probes</button>
-      <button class="btn btn-dark" type="button" id="button-addon1" (click)="onGenerateAvailability();" style="border:solid;border-width:1px;border-color:white;">Generate Availability Probes</button>
       <button class="btn btn-primary" type="button" (click)="exceptionListCollapse.toggle()" style="border:solid;border-width:1px;border-color:white;"
               [attr.aria-expanded]="!exceptionListCollapse.collapsed" aria-controls="exceptionList">
         Toggle Exception Types
@@ -25,6 +14,25 @@
               [attr.aria-expanded]="!designCollapse.collapsed" aria-controls="designDiagram">
         Toggle Design Diagram
       </button>
+    </div>
+    <div class="input-group input-group-sm">
+      <p *ngIf="!exceptionlist"><em>Loading...</em></p>
+      <span class="input-group-text input-group-sizing-s" style="width:280px"><b># Random synthetic events to generate:</b></span>
+      <div class="col-xs-2">
+        <input type="text" size="1" value="10" class="form-control-sm" #generateExCount />
+      </div>
+      <span class="input-group-text input-group-sizing-s" style="width:170px"><b>Event generation case:</b></span>
+      <div class="col-xs-2">
+        <select class="form-select form-select-sm" (change)="onSelectGenerationCaseHandler($event)">
+          <option value="selectcase" selected>Select an events generation case...</option>
+          <option value="iloggerlogger">Generate Logs with ILogger in Logger Service</option>
+          <option value="appinsightslogger">Generate Logs with AppInsights in Logger Service</option>
+          <option value="exceptionsfilters">Generate Logs with Filters in ExceptionUtilities Controller</option>
+          <option value="metricsdependencies">Generate Dependency Probes in MetricsUtilities Controller</option>
+          <option value="metricsavailability">Generate Availability Probes in MetricsUtilities Controller</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="button" id="button-addon1" (click)="onRunEventGeneration();" style="border:solid;border-width:1px;border-color:white;width:200px">Run Events Generation</button>
     </div>
   </div>
   <div>

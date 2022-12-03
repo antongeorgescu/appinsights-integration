@@ -223,7 +223,46 @@ namespace AngularSpaWebApi.Controllers
             }
 
             var okResponse = new HttpResponseMessage();
-            okResponse.Content = JsonContent.Create($"{count} synthetic logs have been generated.");
+            okResponse.Content = JsonContent.Create($"{count} synthetic logs have been generated via AspNetCore ILogger.in Logger service");
+            return Ok(okResponse.Content.ReadAsStringAsync().Result);
+        }
+
+        [HttpGet("appinsightslib/{count}/apm/appinsights")]
+        public async Task<ActionResult<string>> GetRandomExceptionsToAppInsightsLib(int count)
+        {
+            var exceptions = (new ExceptionServices(_datasetRepo)).GenerateRandomErrorList(count).Result;
+
+            // call Logger service to log exceptions
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/text"));
+            client.DefaultRequestHeaders.Add("User-Agent", "Synthetic Exception Generator");
+
+            using HttpResponseMessage response0 = await client.GetAsync($"{_loggerURI}/apmactive/appinsights");
+            if (!response0.StatusCode.Equals(HttpStatusCode.OK))
+                return BadRequest(response0.Content.ReadAsStringAsync().Result);
+
+            string[] severity = new[] { "error", "critical" };
+            Random rnd = new();
+            foreach (ThrowErrorRequest ex in exceptions)
+            {
+                var content = JsonContent.Create(new LoggerEntry()
+                {
+                    Class = ex.Class,
+                    Description = ex.Description,
+                    Type = ex.Code,
+                    CreateDate = DateTime.Now,
+                    Message = ex.Message
+                });
+                var inx = rnd.Next(0,1);
+                using HttpResponseMessage response = await client.PostAsync($"{_loggerURI}/appinsights/{severity[inx]}", content);
+                if (!response.StatusCode.Equals(HttpStatusCode.OK))
+                    return BadRequest(response.Content.ReadAsStringAsync().Result);
+            }
+
+            var okResponse = new HttpResponseMessage();
+            okResponse.Content = JsonContent.Create($"{count} synthetic logs have been generated via AppInsights lib in Logger service.");
             return Ok(okResponse.Content.ReadAsStringAsync().Result);
         }
 

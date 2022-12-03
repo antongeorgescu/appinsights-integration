@@ -61,7 +61,7 @@ namespace LoggerApiDemo.Controllers
                 return BadRequest();
 
             _logger.LogInformation(eventId: new EventId(0, entry.HashKey),
-                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
 
             return Ok($"INFO log saved on {DateTime.Now}");
@@ -74,7 +74,7 @@ namespace LoggerApiDemo.Controllers
                 return BadRequest();
 
             _logger.LogDebug(eventId: new EventId(0, entry.HashKey),
-                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
             return Ok($"DEBUG log saved on {DateTime.Now}");
         }
@@ -86,7 +86,7 @@ namespace LoggerApiDemo.Controllers
                 return BadRequest();
 
             _logger.LogWarning(eventId: new EventId(0, entry.HashKey),
-                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
             return Ok($"WARN log saved on {DateTime.Now}");
         }
@@ -98,9 +98,18 @@ namespace LoggerApiDemo.Controllers
                 return BadRequest();
 
             _logger.LogError(eventId: new EventId(0, entry.HashKey),
-                                exception: new Exception($"*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
-                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                exception: new Exception($"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
+                                message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
+
+            return Ok($"ERROR log saved on {DateTime.Now}");
+        }
+
+        [HttpPost("appinsights/error")]
+        public IActionResult PostErrorAppInsights([FromBody] LoggerEntry entry)
+        {
+            if (string.IsNullOrEmpty(entry.Message))
+                return BadRequest();
 
             // save "error" severity on ApplicationInsights if configured
             if (_configuration.GetSection($"Logging:ApplicationInsights").GetChildren().Count() > 0)
@@ -109,11 +118,12 @@ namespace LoggerApiDemo.Controllers
                 appInsClient.TrackException(new ExceptionTelemetry()
                 {
                     SeverityLevel = SeverityLevel.Error,
-                    Message = $"ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
+                    Message = $"SOURCE*AppInsightsLib*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
                 });
             }
-            return Ok($"ERROR log saved on {DateTime.Now}");
+            return Ok($"ERROR log saved in AppInsights on {DateTime.Now}");
         }
+
 
         [HttpPost("log/trace")]
         public IActionResult PostTrace([FromBody] LoggerEntry entry)
@@ -122,7 +132,7 @@ namespace LoggerApiDemo.Controllers
                 return BadRequest();
 
             _logger.LogTrace(eventId: new EventId(0, entry.HashKey),
-                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
             return Ok($"TRACE log saved on {DateTime.Now}");
         }
@@ -134,9 +144,17 @@ namespace LoggerApiDemo.Controllers
                 return BadRequest();
 
             _logger.LogCritical($"|CLASS:{entry.Class}|MESSAGE:{entry.Message}", "POST"); _logger.LogInformation(eventId: new EventId(0, entry.HashKey),
-                                exception: new Exception($"*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
-                                message: $"*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+                                exception: new Exception($"SOURCE*ILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
+                                message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
+            return Ok($"CRITICAL log saved on {DateTime.Now}");
+        }
+
+        [HttpPost("appinsights/critical")]
+        public IActionResult PostCriticalAppInsights([FromBody] LoggerEntry entry)
+        {
+            if (string.IsNullOrEmpty(entry.Message))
+                return BadRequest();
 
             // save "critical" severity on ApplicationInsights if configured
             if (_configuration.GetSection($"Logging:ApplicationInsights").GetChildren().Count() > 0)
@@ -145,11 +163,11 @@ namespace LoggerApiDemo.Controllers
                 appInsClient.TrackException(new ExceptionTelemetry()
                 {
                     SeverityLevel = SeverityLevel.Critical,
-                    Message = $"ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
+                    Message = $"SOURCE*AppInsightsLib*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
                 });
             }
-            
-            return Ok($"CRITICAL log saved on {DateTime.Now}");
+
+            return Ok($"CRITICAL log saved in Appinsights on {DateTime.Now}");
         }
 
         [HttpGet("logs/nlog/{logtype}")]
