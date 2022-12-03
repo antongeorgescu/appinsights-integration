@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, throwError, Observable } from 'rxjs';
 
 /**
- * @title Card with multiple sections
+ * @title Application Performance Monitoring (APM) - Proof-of-Concept 
  */
 @Component({
   selector: 'logger-to-apm',
@@ -25,16 +25,23 @@ export class LoggerToApmComponent {
   public logContent?: string = "";
   selectedAPM: string = "appinsights";
   selectedCase: string = "selectcase";
+  show: string = "Toggle";
+  selectedDoc: string = "selectdoc";
+
+  isShownExceptionList = false;
+  isShownDesign = false;
 
   @ViewChild('generateExCount') generateExCount?: ElementRef;
   @ViewChild('logGenerationResultRef') logGenerationResultRef?: ElementRef;
+  @ViewChild('exceptionListCollapse') exceptionListRef?: ElementRef;
+  @ViewChild('designCollapse') designRef?: ElementRef;
   logGenerationResultLabel?: HTMLElement;
+  exceptionList?: HTMLElement;
+  designContainer?: HTMLElement
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
     this.http = http;
-
-    this.uriDesignDiagram = new URL(this.baseUrl + 'assets/images/Logger-AppInsights-POC.jpg');
 
     this.http.get<Connectivity>(this.baseUrl + 'exceptionutilities/connection').subscribe(result => {
       console.log(result.status + " at " + result.datetime);
@@ -44,6 +51,8 @@ export class LoggerToApmComponent {
 
   ngOnInit() {
     this.logGenerationResultLabel = this.logGenerationResultRef?.nativeElement;
+    this.exceptionList = this.exceptionListRef?.nativeElement;
+    this.designContainer = this.designRef?.nativeElement;
     this.http.get<Exception[]>(this.baseUrl + 'exceptionutilities/extypelist/all').subscribe(result => {
       console.log(result);
       for (var i = 0; i < result.length; i++) {
@@ -61,6 +70,25 @@ export class LoggerToApmComponent {
         this.logfiles.push(entry)
       }
     }, error => console.error(error));
+  }
+
+  onDocumentationShow() {
+    switch (this.selectedDoc) {
+      case 'exceptionlist':
+        this.isShownExceptionList = !this.isShownExceptionList;
+        break;
+      case 'appinsights':
+        this.uriDesignDiagram = new URL(this.baseUrl + 'assets/images/Logger-AppInsights-POC.jpg');
+        this.isShownDesign = !this.isShownDesign;
+        break;
+      case 'appdynamics':
+        break;
+    }
+  }
+
+  //event handler for the select element's change event
+  onSelectDocumentationHandler(event: any) {
+    this.selectedDoc = event.target.value;
   }
 
   //event handler for the select element's change event
