@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -15,6 +15,8 @@ import { DemoMaterialModule } from './ng.material.module';
 //import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
+import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applicationinsights-angularplugin-js';
+import { ApplicationInsightsErrorHandler } from '../apm/appinsights.errorhandler';
 
 @NgModule({
   declarations: [
@@ -42,10 +44,13 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
       { path: 'documentation', component: DocumentationComponent },
     ])
   ],
-  //providers: [
-  //  { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
-  //],
-  providers: [],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: ApplicationinsightsAngularpluginErrorService
+      //useClass: ApplicationInsightsErrorHandler
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

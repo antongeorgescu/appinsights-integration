@@ -26,6 +26,8 @@
     "@angular/platform-browser-dynamic": "^14.0.3",
     "@angular/platform-server": "^14.0.3",
     "@angular/router": "^14.0.3",
+    "@microsoft/applicationinsights-angularplugin-js": "^3.0.0",
+    "@microsoft/applicationinsights-web": "^2.8.9",
     "@nguniversal/module-map-ngfactory-loader": "^8.2.6",
     "angular-in-memory-web-api": "0.11.0",
     "bootstrap": "^5.1.3",

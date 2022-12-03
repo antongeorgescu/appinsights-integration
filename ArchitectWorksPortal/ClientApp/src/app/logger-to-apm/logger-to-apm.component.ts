@@ -1,6 +1,7 @@
 import { Component,ElementRef,Inject, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, throwError, Observable } from 'rxjs';
+import { AppInsightsService } from '../../apm/appinsights.service';
 
 /**
  * @title Application Performance Monitoring (APM) - Proof-of-Concept 
@@ -28,6 +29,8 @@ export class LoggerToApmComponent {
   show: string = "Toggle";
   selectedDoc: string = "selectdoc";
 
+  appInsightsService?: AppInsightsService;
+
   isShownExceptionList = false;
   isShownDesign = false;
 
@@ -39,9 +42,10 @@ export class LoggerToApmComponent {
   exceptionList?: HTMLElement;
   designContainer?: HTMLElement
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, appInsightsService: AppInsightsService) {
     this.baseUrl = baseUrl;
     this.http = http;
+    this.appInsightsService = appInsightsService;
 
     this.http.get<Connectivity>(this.baseUrl + 'exceptionutilities/connection').subscribe(result => {
       console.log(result.status + " at " + result.datetime);
@@ -50,6 +54,9 @@ export class LoggerToApmComponent {
   }
 
   ngOnInit() {
+
+    this.appInsightsService?.logPageView("SOURCE*Browser*TYPE*TrackPageView*CLASS*Info*MESSAGE*SyntheticEventGeneration");
+
     this.logGenerationResultLabel = this.logGenerationResultRef?.nativeElement;
     this.exceptionList = this.exceptionListRef?.nativeElement;
     this.designContainer = this.designRef?.nativeElement;
@@ -142,6 +149,7 @@ export class LoggerToApmComponent {
       this.logsGeneratedResponse = 'Ok:' + result;
     }, error => {
       console.error(error);
+      this.appInsightsService?.logException(new Error(`SOURCE*Browser*TYPE*Exception*MESSAGE*${error.message}*STATUS*${error.error.status}`),3);
       //this.logGenerationResultLabel?.style.color = "red";
       this.logsGeneratedResponse = 'Error:' + error.message + '*' + error.error.status
     });
@@ -159,6 +167,7 @@ export class LoggerToApmComponent {
       this.logsGeneratedResponse = 'Ok:' + result;
     }, error => {
       console.error(error);
+      this.appInsightsService?.logException(new Error(`SOURCE*Browser*TYPE*Exception*MESSAGE*${error.message}*STATUS*${error.error.status}`), 3);
       //this.logGenerationResultLabel?.style.color = "red";
       this.logsGeneratedResponse = 'Error:' + error.message + '*' + error.error.status
     });
@@ -177,6 +186,7 @@ export class LoggerToApmComponent {
         this.logsGeneratedResponse = `[Call ${i}] ${result.content}`;
       }, error => {
         console.error(error);
+        this.appInsightsService?.logException(new Error(`SOURCE*Browser*TYPE*Exception*MESSAGE*${error.message}*STATUS*${error.error.status}`), 3);
         //this.logGenerationResultLabel?.style.color = "red";
         this.logsGeneratedResponse = `[Call ${i}] ${error.message}`;
       });
@@ -197,6 +207,7 @@ export class LoggerToApmComponent {
       this.logsGeneratedResponse = 'Ok:' + result.content;
     }, error => {
       console.error(error);
+      this.appInsightsService?.logException(new Error(`SOURCE*Browser*TYPE*Exception*MESSAGE*${error.message}*STATUS*${error.error.status}`), 3);
       //this.logGenerationResultLabel?.style.color = "red";
       this.logsGeneratedResponse = 'Error:' + error.message;
     });
@@ -215,6 +226,7 @@ export class LoggerToApmComponent {
         this.logsGeneratedResponse = `[Call ${i}] ${result.content}`;
       }, error => {
         console.error(error);
+        this.appInsightsService?.logException(new Error(`SOURCE*Browser*TYPE*Exception*MESSAGE*${error.message}*STATUS*${error.error.status}`), 3);
         //this.logGenerationResultLabel?.style.color = "red";
         this.logsGeneratedResponse = `[Call ${i}] ${error.message}`;
       });
