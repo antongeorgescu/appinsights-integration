@@ -34,10 +34,18 @@ export class LoggerToApmComponent {
   isShownExceptionList = false;
   isShownDesign = false;
 
+  casesCount: number = 0;
+  interval: any;
+  caseTimeoutSecs: number = 10;
+  caseNo: number = 0;
+
+  caseGeneratedInfo: string = '';
+
   @ViewChild('generateExCount') generateExCount?: ElementRef;
   @ViewChild('logGenerationResultRef') logGenerationResultRef?: ElementRef;
   @ViewChild('exceptionListCollapse') exceptionListRef?: ElementRef;
   @ViewChild('designCollapse') designRef?: ElementRef;
+  @ViewChild('casesCount') casesCountRef?: ElementRef;
   logGenerationResultLabel?: HTMLElement;
   exceptionList?: HTMLElement;
   designContainer?: HTMLElement
@@ -138,7 +146,7 @@ export class LoggerToApmComponent {
   }
 
   generateExceptionsILoggerInLoggerController(): void {
-    this.logsGeneratedResponse = "Working hard to generate synthetic exceptions...";
+    this.logsGeneratedResponse = "Generating synthetic exceptions via AspNetCore ILogger configuration...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
     var apmName = this.selectedAPM == "appinsights" ? "appinsights" : "appdynamics";
@@ -156,7 +164,7 @@ export class LoggerToApmComponent {
   }
 
   generateExceptionsAppInsightsInLoggerController(): void {
-    this.logsGeneratedResponse = "Working hard to generate synthetic exceptions...";
+    this.logsGeneratedResponse = "Generating synthetic exceptions via ApplicationInsights SDK...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
     var apmName = this.selectedAPM == "appinsights" ? "appinsights" : "appdynamics";
@@ -174,7 +182,7 @@ export class LoggerToApmComponent {
   }
 
   async generateExceptionsFiltersInExceptionsController() {
-    this.logsGeneratedResponse = "Working hard to generate synthetic exceptions...";
+    this.logsGeneratedResponse = "Generating synthetic exceptions via Exception Filters with ApplicationInsights...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
     var apmName = this.selectedAPM == "appinsights" ? "appinsights" : "appdynamics";
@@ -196,7 +204,7 @@ export class LoggerToApmComponent {
   }
 
   generateDependencyInMetricsController(): void {
-    this.logsGeneratedResponse = "Working hard to generate synthetic dependency probes...";
+    this.logsGeneratedResponse = "Generating synthetic dependency probes with ApplicationInsights TrackDependency...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
     var apmName = this.selectedAPM == "appinsights" ? "appinsights" : "appdynamics";
@@ -214,7 +222,7 @@ export class LoggerToApmComponent {
   }
 
   async generateAvailabilityInMetricsController() {
-    this.logsGeneratedResponse = "Working hard to generate synthetic availability probes...";
+    this.logsGeneratedResponse = "Generating synthetic dependency probes with ApplicationInsights TrackAvailability...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
     var apmName = this.selectedAPM == "appinsights" ? "appinsights" : "appdynamics"; 
@@ -233,6 +241,24 @@ export class LoggerToApmComponent {
 
       await new Promise(f => setTimeout(f, 1000));
     }
+  }
+
+  async onStartTimerEventGeneration() {
+    var cases: string[] = ["iloggerlogger", "appinsightslogger", "exceptionsfilters", "metricsdependencies", "metricsavailability"];
+    this.casesCount = this.casesCountRef?.nativeElement.value;
+    this.caseGeneratedInfo = "Started timed out random generated cases."
+    for (var i = 0; i < this.casesCount; i++) {
+      var inx = Math.floor(Math.random() * cases.length);
+      this.selectedCase = cases[inx];
+      this.caseGeneratedInfo = `Case ${i+1} for [${this.selectedCase}] initiated.`
+      this.onRunEventGeneration();
+      await new Promise(f => setTimeout(f, 10000));
+    }
+    this.caseGeneratedInfo = "Ended timed out random generated cases."
+  }
+
+  getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
   }
 }
 

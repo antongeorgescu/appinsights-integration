@@ -41,7 +41,14 @@
         </select>
       </div>
       <button class="btn btn-primary" type="button" id="button-addon1" (click)="onRunEventGeneration();" style="border:solid;border-width:1px;border-color:white;width:200px">Run Events Generation</button>
-    </div>
+      <span class="input-group-text input-group-sizing-s" style="width:280px"><b># Random cases (10 secs interval):</b></span>
+      <div class="col-xs-2">
+        <input type="text" size="1" value="10" class="form-control-sm" #casesCount />
+      </div>
+      <button class="btn btn-primary" type="button" id="button-addon1" (click)="onStartTimerEventGeneration();" style="border:solid;border-width:1px;border-color:white;">Start Timed Up Random Events Generation</button>
+      <span class="input-group-text input-group-sizing-s">{{caseGeneratedInfo}}</span>
+      <!--<button class="btn btn-primary" type="button" id="button-addon1" (click)="onStopTimerEventGeneration();" style="border:solid;border-width:1px;border-color:white;">Stop Timed Up Random Events Generation</button>-->
+</div>
   </div>
   <div>
     <label style="font-size:small;color:black" #logGenerationResult>{{logsGeneratedResponse}}</label>
