@@ -18,6 +18,7 @@ using System.Diagnostics;
 using Azure;
 using Microsoft.IdentityModel.Abstractions;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
 
 namespace AngularSpaWebApi.Controllers
 {
@@ -97,7 +98,8 @@ namespace AngularSpaWebApi.Controllers
                     // CPU/Memory Performance counter is also shown
                     // automatically without any additional steps.
                     var inx = rns.Next(0, _trackedWebDependencies.Length - 1);
-
+                    var startTime = DateTime.Now;
+                    var timer = Stopwatch.StartNew();
                     using (var opSynthTrackDepends = client.StartOperation<RequestTelemetry>("SynthTrackedDependencies"))
                     {
                         opSynthTrackDepends.Telemetry.Properties["target"] = _trackedWebDependencies[inx];
@@ -108,7 +110,7 @@ namespace AngularSpaWebApi.Controllers
                             {
                                 opSynthTrackDepends.Telemetry.Success = true;
                                 okCount++;
-                            } 
+                            }
                             else
                                 opSynthTrackDepends.Telemetry.Success = false;
 
@@ -117,8 +119,12 @@ namespace AngularSpaWebApi.Controllers
                         {
                             opSynthTrackDepends.Telemetry.Success = false;
                         }
+                        finally{
+                            timer.Stop();
+                            client.TrackDependency("HTTPRequest", $"Get_{_trackedWebDependencies[inx]}", "", startTime, timer.Elapsed, opSynthTrackDepends.Telemetry.Success ?? false);
+                        }
                     }
-                    
+
                     //client
                     Task.Delay(1000).Wait();
                 }
