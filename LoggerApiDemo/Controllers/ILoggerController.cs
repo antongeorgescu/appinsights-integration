@@ -115,6 +115,7 @@ namespace LoggerApiDemo.Controllers
             if (_configuration.GetSection($"Logging:ApplicationInsights").GetChildren().Count() > 0)
             {
                 TelemetryClient appInsClient = new();
+                
                 appInsClient.TrackException(new ExceptionTelemetry()
                 {
                     SeverityLevel = SeverityLevel.Error,
