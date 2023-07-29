@@ -146,5 +146,6 @@
     <Build Include="dbo\User Defined Types\empid.sql" />
     <Build Include="dbo\User Defined Types\id.sql" />
     <Build Include="dbo\User Defined Types\tid.sql" />
+    <Build Include="Scripts\CreateArchitectWorksDatabaseAndPopulate.sql" />
   </ItemGroup>
 </Project>

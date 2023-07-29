@@ -1,7 +1,4 @@
-﻿USE [master]
-GO
-
-/* For security reasons the login is created disabled and with a random password. */
+﻿/* For security reasons the login is created disabled and with a random password. */
 /****** Object:  Login [alvazpoc]    Script Date: 7/29/2023 8:46:24 AM ******/
 CREATE LOGIN [alvazpoc] WITH PASSWORD=N'MuP258nKp95CSQYQeoxJn28B/QL4ySDdU7l/xYB+Fzk=', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
 GO
