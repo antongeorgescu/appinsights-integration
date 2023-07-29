@@ -26,7 +26,7 @@ namespace ArchitectWorksPortal.Repositories
             var operation = appInsClient.StartOperation(new DependencyTelemetry
                                             {
                                                 Name = "GetContentTypesDatabase",
-                                                Target = "SyntheticDataDb",
+                                                Target = context.DatabaseName,
                                                 Type = "SQLQuery",
                                                 CommandName = query
                                             });
@@ -58,7 +58,7 @@ namespace ArchitectWorksPortal.Repositories
             var operation = appInsClient.StartOperation(new DependencyTelemetry
             {
                 Name = "GetContentTypeWithIdDatabase",
-                Target = "SyntheticDataDb",
+                Target = context.DatabaseName,
                 Type = "SQLQuery",
                 CommandName = query
             });

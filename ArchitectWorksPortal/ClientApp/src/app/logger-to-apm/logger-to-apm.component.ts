@@ -149,8 +149,10 @@ export class LoggerToApmComponent {
     this.logsGeneratedResponse = "Generating synthetic exceptions via AspNetCore ILogger configuration...";
     const valueInput = this.generateExCount?.nativeElement.value;
 
-    var apmName = this.selectedAPM == "appinsights" ? "appinsights" : "appdynamics";
-
+    var apmName = "appinsights";
+    if (this.selectedAPM == "appdynamics")
+      apmName = "appdynamics";
+    
     this.http.get(this.baseUrl + `exceptionutilities/loggerservice/${valueInput}/apm/${apmName}`).subscribe(result => {
       console.log(result);
       //this.logGenerationResultLabel?.style.color. = "black";

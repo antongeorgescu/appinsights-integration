@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "LoggerApiDemo20221125200844",
+      "defaultValue": "LoggerApiDemo20221127093952",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

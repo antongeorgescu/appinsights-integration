@@ -16,9 +16,9 @@ namespace ArchitectWorksPortal.Repositories
 
         public async Task<IEnumerable<Workitem>> GetWorkitems()
         {
-            var query = "SELECT wt.Name as [Type],wi.[Title],wi.[Description],wi.[Notes] " +
-                "FROM [SyntheticData].[dbo].[WorkItem] as wi " +
-                "JOIN [SyntheticData].[dbo].[WorkType] as wt ON wi.TypeID = wt.TypeID";
+            var query = $"SELECT wt.Name as [Type],wi.[Title],wi.[Description],wi.[Notes] " +
+                $"FROM [{context.DatabaseName}].[dbo].[WorkItem] as wi " +
+                $"JOIN [{context.DatabaseName}].[dbo].[WorkType] as wt ON wi.TypeID = wt.TypeID";
 
             using (var connection = context.CreateConnection())
             {

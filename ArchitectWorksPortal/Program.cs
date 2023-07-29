@@ -30,6 +30,7 @@ builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddScoped<IContentTypeRepository, ContentTypeRepository>();
 builder.Services.AddScoped<IDatasetRepository, DatasetRepository>();
 builder.Services.AddScoped<IPortalRepository, PortalRepository>();
+builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
 builder.Services.AddScoped<AppInsightHandleExceptionAttribute>();
 builder.Services.AddScoped<AppDynamicsHandleExceptionAttribute>();
 builder.Services.AddEndpointsApiExplorer();

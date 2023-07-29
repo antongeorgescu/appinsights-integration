@@ -34,6 +34,7 @@ namespace LoggerApiDemo.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            // returns the status of service
             return Ok($"ILogger API instance started at {DateTime.Now}");
         }
 

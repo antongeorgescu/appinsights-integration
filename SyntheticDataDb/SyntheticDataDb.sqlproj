@@ -121,6 +121,9 @@
     <Folder Include="Properties" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
+    <Folder Include="Scripts\" />
+    <Folder Include="Security\" />
+    <Folder Include="dbo\User Defined Types\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\ContentType.sql">
@@ -133,5 +136,15 @@
     </Build>
     <Build Include="dbo\Tables\WorkType.sql" />
     <Build Include="dbo\Tables\WorkItem.sql" />
+    <Build Include="dbo\Tables\authors.sql" />
+    <Build Include="dbo\Tables\publishers.sql" />
+    <Build Include="dbo\Tables\titleauthor.sql" />
+    <Build Include="dbo\Tables\titles.sql" />
+    <None Include="Scripts\ScriptsIgnoredOnImport.sql" />
+    <Build Include="Security\alvaz-agent.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="dbo\User Defined Types\empid.sql" />
+    <Build Include="dbo\User Defined Types\id.sql" />
+    <Build Include="dbo\User Defined Types\tid.sql" />
   </ItemGroup>
 </Project>

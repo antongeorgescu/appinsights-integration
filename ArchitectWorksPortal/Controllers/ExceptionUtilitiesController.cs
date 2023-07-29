@@ -61,6 +61,7 @@ namespace AngularSpaWebApi.Controllers
         [HttpGet("connection")]
         public IActionResult GetConnectionStatus()
         {
+            // returns the status of service
             return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
         }
 

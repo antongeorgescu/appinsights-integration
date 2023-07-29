@@ -9,7 +9,9 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { PubsComponent } from './pubs/pubs.component';
 import { LoggerToApmComponent } from './logger-to-apm/logger-to-apm.component';
+import { EmbeddedBrowserComponent } from './embedded-browser/browser.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { DemoMaterialModule } from './ng.material.module';
 //import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
@@ -25,8 +27,10 @@ import { ApplicationInsightsErrorHandler } from '../apm/appinsights.errorhandler
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
+    PubsComponent,
     LoggerToApmComponent,
     DocumentationComponent,
+    EmbeddedBrowserComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -41,7 +45,9 @@ import { ApplicationInsightsErrorHandler } from '../apm/appinsights.errorhandler
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'logger-to-apm', component: LoggerToApmComponent },
+      { path: 'pubs', component: PubsComponent },
       { path: 'documentation', component: DocumentationComponent },
+      { path: 'embedded-browser', component: EmbeddedBrowserComponent },
     ])
   ],
   providers: [

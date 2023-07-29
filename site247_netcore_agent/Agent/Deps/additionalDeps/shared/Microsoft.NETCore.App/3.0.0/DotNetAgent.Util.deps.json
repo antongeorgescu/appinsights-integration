@@ -1,0 +1,22 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.0"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "DotNetAgent.Util/1.0.0": {
+        "runtime": {
+          "lib/netcoreapp2.0/DotNetAgent.Util.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DotNetAgent.Util/1.0.0": {
+      "type": "package",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

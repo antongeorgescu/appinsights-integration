@@ -16,11 +16,15 @@ namespace AngularSpaWebApi.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IPortalRepository _portalRepo;
+        private readonly IPublicationRepository _publicationRepo;
 
-        public PortalUtilitiesController(IConfiguration configuration, IPortalRepository portalRepo)
+        public PortalUtilitiesController(IConfiguration configuration, 
+                                            IPortalRepository portalRepo,
+                                            IPublicationRepository publicationRepo)
         {
             _configuration = configuration;
             _portalRepo = portalRepo;
+            _publicationRepo = publicationRepo;
         }
 
         [HttpGet]
@@ -73,6 +77,20 @@ namespace AngularSpaWebApi.Controllers
                     break;
             }
             return Ok(diagramLink);
+        }
+
+        [HttpGet("pubs/db")]
+        public async Task<IEnumerable<Publication>> GetBooksList()
+        {
+            var publications = await _publicationRepo.GetBooksList();
+            return publications;
+        }
+
+        [HttpGet("pubs/namecontains/{namecontains}/titlecontains/{titlecontains}")]
+        public async Task<IEnumerable<Publication>> GetFilteredBooksList(string namecontains, string titlecontains)
+        {
+            var publications = await _publicationRepo.GetFilteredBooksList(namecontains, titlecontains);
+            return publications;
         }
 
         [HttpGet("connection")]

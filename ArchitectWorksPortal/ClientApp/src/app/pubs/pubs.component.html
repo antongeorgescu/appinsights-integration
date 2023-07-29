@@ -1,0 +1,34 @@
+<h3 id="tableLabel">Query data return</h3>
+
+<p>This component demonstrates fetching data from the database server.</p>
+
+<p *ngIf="!pubs"><em>Loading...</em></p>
+
+<table>
+  <tr>
+    <td><b>Author name contains:</b><input type="text" size="1" value="" class="form-control-sm" #nameContains /></td>
+    <td><b>Title contains:</b><input type="text" size="1" value="" class="form-control-sm" #titleContains /></td>
+    <td><button class="btn btn-primary" type="button" (click)="onRunQuery()" style="border:solid;border-width:1px;border-color:white;">Run data query</button></td>
+  </tr>
+</table>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="pubs">
+  <thead>
+    <tr>
+      <th>Author</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Title</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pub of pubs">
+      <td>{{ pub.author }}</td>
+      <td>{{ pub.city }}</td>
+      <td>{{ pub.state }}</td>
+      <td>{{ pub.title }}</td>
+      <td>{{ pub.type }}</td>
+    </tr>
+  </tbody>
+</table>
