@@ -2,6 +2,7 @@ import { Component,ElementRef,Inject, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, throwError, Observable } from 'rxjs';
 import { AppInsightsService } from '../../apm/appinsights.service';
+import { Router } from '@angular/router';
 
 /**
  * @title Application Performance Monitoring (APM) - Proof-of-Concept 
@@ -48,12 +49,15 @@ export class LoggerToApmComponent {
   @ViewChild('casesCount') casesCountRef?: ElementRef;
   logGenerationResultLabel?: HTMLElement;
   exceptionList?: HTMLElement;
-  designContainer?: HTMLElement
+  designContainer?: HTMLElement;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, appInsightsService: AppInsightsService) {
+  router: Router;
+
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, appInsightsService: AppInsightsService, router: Router) {
     this.baseUrl = baseUrl;
     this.http = http;
     this.appInsightsService = appInsightsService;
+    this.router = router;
 
     this.http.get<Connectivity>(this.baseUrl + 'exceptionutilities/connection').subscribe(result => {
       console.log(result.status + " at " + result.datetime);
@@ -261,6 +265,11 @@ export class LoggerToApmComponent {
 
   getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
+  }
+
+  onRedirectEventGenerationPage() {
+    this.casesCount = this.casesCountRef?.nativeElement.value;
+    this.router.navigateByUrl(`/auto-synth-traffic/${this.casesCount}`);
   }
 }
 

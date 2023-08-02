@@ -46,9 +46,9 @@
         <input type="text" size="1" value="10" class="form-control-sm" #casesCount />
       </div>
       <button class="btn btn-primary" type="button" id="button-addon1" (click)="onStartTimerEventGeneration();" style="border:solid;border-width:1px;border-color:white;">Start Timed Up Random Events Generation</button>
+      <button class="btn btn-primary" type="button" id="button-addon1" (click)="onRedirectEventGenerationPage();" style="border:solid;border-width:1px;border-color:white;">Redirect to Random Events Generation Page</button>
       <span class="input-group-text input-group-sizing-s">{{caseGeneratedInfo}}</span>
-      <!--<button class="btn btn-primary" type="button" id="button-addon1" (click)="onStopTimerEventGeneration();" style="border:solid;border-width:1px;border-color:white;">Stop Timed Up Random Events Generation</button>-->
-</div>
+    </div>
   </div>
   <div>
     <label style="font-size:small;color:black" #logGenerationResult>{{logsGeneratedResponse}}</label>

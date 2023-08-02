@@ -1,17 +1,18 @@
 <h3 id="tableLabel">Query data return</h3>
 
-<p>This component demonstrates fetching data from the database server.</p>
+<p>This component demonstrates fetching Authro Info + Publication Title from the Publications table in ArchitectWorks database.</p>
 
 <p *ngIf="!pubs"><em>Loading...</em></p>
 
 <table>
   <tr>
-    <td><b>Author name contains:</b><input type="text" size="1" value="" class="form-control-sm" #nameContains /></td>
-    <td><b>Title contains:</b><input type="text" size="1" value="" class="form-control-sm" #titleContains /></td>
+    <td><b>Author</b> name contains&nbsp;<input type="text" size="5" value="" class="form-control-sm" #nameContains /></td>
+    <td> or <b>Title</b> contains&nbsp; <input type="text" size="5" value="" class="form-control-sm" #titleContains /></td>
     <td><button class="btn btn-primary" type="button" (click)="onRunQuery()" style="border:solid;border-width:1px;border-color:white;">Run data query</button></td>
+    <td>&nbsp; Enter comma separated strings in both "Author" and "Title" fields, with no spaces.</td>
   </tr>
 </table>
-
+<hr/>
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="pubs">
   <thead>
     <tr>

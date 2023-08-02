@@ -12,6 +12,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { PubsComponent } from './pubs/pubs.component';
 import { LoggerToApmComponent } from './logger-to-apm/logger-to-apm.component';
 import { EmbeddedBrowserComponent } from './embedded-browser/browser.component';
+import { AutoSynthTrafficComponent } from './auto-synth-traffic/auto-synth-traffic.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { DemoMaterialModule } from './ng.material.module';
 //import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
@@ -29,6 +30,7 @@ import { ApplicationInsightsErrorHandler } from '../apm/appinsights.errorhandler
     FetchDataComponent,
     PubsComponent,
     LoggerToApmComponent,
+    AutoSynthTrafficComponent,
     DocumentationComponent,
     EmbeddedBrowserComponent
   ],
@@ -48,6 +50,7 @@ import { ApplicationInsightsErrorHandler } from '../apm/appinsights.errorhandler
       { path: 'pubs', component: PubsComponent },
       { path: 'documentation', component: DocumentationComponent },
       { path: 'embedded-browser', component: EmbeddedBrowserComponent },
+      { path: 'auto-synth-traffic/:count', component: AutoSynthTrafficComponent },
     ])
   ],
   providers: [
