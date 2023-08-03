@@ -6,8 +6,8 @@
     <Name>SyntheticDataDb</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{553192d3-23ba-46d2-a34a-0a6846ef943e}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <ProjectGuid>{ac421620-9534-4ee6-a91a-77cad6429a3f}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -25,8 +25,9 @@
     <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
     <AnsiNulls>False</AnsiNulls>
     <QuotedIdentifier>False</QuotedIdentifier>
+    <IsLedgerOn>False</IsLedgerOn>
     <QueryStoreCaptureMode>Auto</QueryStoreCaptureMode>
-    <QueryStoreDesiredState>Off</QueryStoreDesiredState>
+    <QueryStoreDesiredState>ReadWrite</QueryStoreDesiredState>
     <QueryStoreFlushInterval>900</QueryStoreFlushInterval>
     <QueryStoreStatsInterval>60</QueryStoreStatsInterval>
     <QueryStoreMaxPlansPerQuery>200</QueryStoreMaxPlansPerQuery>
@@ -44,7 +45,7 @@
     <IsTransformNoiseWordsOn>False</IsTransformNoiseWordsOn>
     <TwoDigitYearCutoff>2049</TwoDigitYearCutoff>
     <NonTransactedFileStreamAccess>OFF</NonTransactedFileStreamAccess>
-    <TargetRecoveryTimePeriod>0</TargetRecoveryTimePeriod>
+    <TargetRecoveryTimePeriod>60</TargetRecoveryTimePeriod>
     <TargetRecoveryTimeUnit>SECONDS</TargetRecoveryTimeUnit>
     <IsChangeTrackingOn>False</IsChangeTrackingOn>
     <IsChangeTrackingAutoCleanupOn>True</IsChangeTrackingAutoCleanupOn>
@@ -62,7 +63,7 @@
     <ReadCommittedSnapshot>False</ReadCommittedSnapshot>
     <VardecimalStorageFormatOn>True</VardecimalStorageFormatOn>
     <SupplementalLoggingOn>False</SupplementalLoggingOn>
-    <CompatibilityMode>150</CompatibilityMode>
+    <CompatibilityMode>160</CompatibilityMode>
     <AnsiNullDefault>False</AnsiNullDefault>
     <AnsiPadding>False</AnsiPadding>
     <AnsiWarnings>False</AnsiWarnings>
@@ -83,7 +84,6 @@
     <Recovery>SIMPLE</Recovery>
     <EnableFullTextSearch>True</EnableFullTextSearch>
     <DefaultFilegroup>PRIMARY</DefaultFilegroup>
-    <CreateProjectFromDatabaseCompleted>True</CreateProjectFromDatabaseCompleted>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -121,12 +121,38 @@
     <Folder Include="Properties" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
-    <Folder Include="Scripts\" />
+    <Folder Include="db_owner\" />
+    <Folder Include="db_owner\Views\" />
     <Folder Include="Security\" />
+    <Folder Include="db_owner\Stored Procedures\" />
     <Folder Include="dbo\User Defined Types\" />
   </ItemGroup>
   <ItemGroup>
+    <Build Include="dbo\Tables\authors.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Tables\publishers.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Tables\titles.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Tables\ContentType.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Tables\titleauthor.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Tables\WorkType.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Tables\WorkItem.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
@@ -134,18 +160,32 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\WorkType.sql" />
-    <Build Include="dbo\Tables\WorkItem.sql" />
-    <Build Include="dbo\Tables\authors.sql" />
-    <Build Include="dbo\Tables\publishers.sql" />
-    <Build Include="dbo\Tables\titleauthor.sql" />
-    <Build Include="dbo\Tables\titles.sql" />
-    <None Include="Scripts\ScriptsIgnoredOnImport.sql" />
+    <Build Include="db_owner\Views\titleview.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
     <Build Include="Security\alvaz-agent.sql" />
+    <Build Include="Security\alvazpoc.sql" />
     <Build Include="Security\RoleMemberships.sql" />
-    <Build Include="dbo\User Defined Types\empid.sql" />
+    <Build Include="db_owner\Stored Procedures\byroyalty.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="db_owner\Stored Procedures\reptq1.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="db_owner\Stored Procedures\reptq2.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="db_owner\Stored Procedures\reptq3.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\User Defined Types\id.sql" />
     <Build Include="dbo\User Defined Types\tid.sql" />
-    <Build Include="Scripts\CreateArchitectWorksDatabaseAndPopulate.sql" />
+    <Build Include="dbo\User Defined Types\empid.sql" />
+    <Build Include="Security\Permissions.sql" />
   </ItemGroup>
 </Project>

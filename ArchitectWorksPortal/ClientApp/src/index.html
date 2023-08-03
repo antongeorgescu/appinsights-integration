@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Architect Works Portal</title>
-    <base href="/" />
+<head>
+  <meta charset="utf-8" />
+  <title>Architect Works Portal</title>
+  <base href="/" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  </head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <script type="text/javascript">
+    (function(w,d,s,r,k,h,m){
+	    if(w.performance && w.performance.timing && w.performance.navigation) {
+		    w[r] = w[r] || function(){(w[r].q = w[r].q || []).push(arguments)};
+		    h=d.createElement('script');h.async=true;h.setAttribute('src',s+k);
+		    d.getElementsByTagName('head')[0].appendChild(h);
+		    (m = window.onerror),(window.onerror = function (b, c, d, f, g) {
+		    m && m(b, c, d, f, g),g || (g = new Error(b)),(w[r].q = w[r].q || []).push(["captureException",g]);})
+	    }
+    })(window,document,'//static.site24x7rum.com/beacon/site24x7rum-min.js?appKey=','s247r','b1d507bdcbb3d600cc1f2705e9dbd0a2');
+  </script>
+</head>
   <body>
     <app-root>Loading...</app-root>
   </body>
