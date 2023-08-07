@@ -14,6 +14,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
     <PackageReference Include="Site24x7.DotNetCoreAgent" Version="6.2.3" />
+    <PackageReference Include="Site24x7.DotNetCoreAgent.Api" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="C:\Users\ag4488\.nuget\packages\site24x7.dotnetcoreagent\6.2.3\contentFiles\any\netstandard2.0\DotNetAgent\apminsight.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DotNetAgent\AgentLogs\DotNetAgentManaged.LoggerApiDemo.LoggerApiDemo.17980-28-07-2023.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="logs\2022-11-03_logfile.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -213,11 +214,20 @@ namespace LoggerApiDemo.Controllers
         [HttpGet("logfilecontent/{filename}")]
         public IActionResult GetLogFileContent(string filename)
         {
-            // get 'logs' dir path
-            var dirPath = $"{Directory.GetCurrentDirectory()}\\logs";
-            var logcontent = System.IO.File.ReadAllText($"{dirPath}\\{filename}");
-            
-            return Ok(logcontent);
+            string logcontent = string.Empty;
+            try
+            {
+                // get 'logs' dir path
+                var dirPath = $"{Directory.GetCurrentDirectory()}\\logs";
+                logcontent = System.IO.File.ReadAllText($"{dirPath}\\{filename}");
+                return Ok(logcontent);
+            }
+            catch(Exception ex)
+            { 
+                logcontent = ex.Message; 
+                return BadRequest(logcontent);
+            }
+                
         }
     }
 }

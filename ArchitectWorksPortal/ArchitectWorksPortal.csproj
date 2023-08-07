@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0-preview2.22314.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Site24x7.DotNetCoreAgent" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
