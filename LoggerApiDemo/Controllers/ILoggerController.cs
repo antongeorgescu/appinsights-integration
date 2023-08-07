@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -228,6 +229,24 @@ namespace LoggerApiDemo.Controllers
                 return BadRequest(logcontent);
             }
                 
+        }
+
+        [HttpGet("health")]
+        public IActionResult GetHealthStatus()
+        {
+            string logcontent = string.Empty;
+            try
+            {
+                // get 'logs' dir path
+                var dirPath = $"{Directory.GetCurrentDirectory()}\\logs";
+                int fCount = Directory.GetFiles(dirPath, "*", SearchOption.TopDirectoryOnly).Length;
+                return Ok($"Log filed count:{fCount}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }
