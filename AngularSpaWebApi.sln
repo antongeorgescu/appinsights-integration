@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllersUnitTests", "Con
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SyntheticDataDb", "SyntheticDataDb\SyntheticDataDb.sqlproj", "{AC421620-9534-4EE6-A91A-77CAD6429A3F}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SyntheticTrafficPollers", "SyntheticTrafficPollers\SyntheticTrafficPollers.pyproj", "{62DEA995-B6ED-4BF3-BACE-8A30CA6273B8}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SyntheticTrafficGenerator", "SyntheticTrafficGenerators\SyntheticTrafficGenerator.pyproj", "{62DEA995-B6ED-4BF3-BACE-8A30CA6273B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
