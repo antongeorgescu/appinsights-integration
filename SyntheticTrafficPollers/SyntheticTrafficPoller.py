@@ -21,20 +21,24 @@ def poll_url(scheduler):
     log_count = random.randrange(21,40)
 
     # open a connection to a URL using urllib2
+    curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     request_url = f"{url_archworksportal}/auto-synth-traffic/{log_count}" 
     webUrl = urlopen(request_url)
       
     #get the result code and print it
-    print(f'Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+    print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
       
     curr_date = datetime.datetime.now().strftime("%Y%m%d")
+    
+
     filename = f'log_{curr_date}.log'
     
+    curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     request_url = f"{url_loggerapi}/ilogger/logfilecontent/{filename}" 
     webUrl = urlopen(request_url)
       
     #get the result code and print it
-    print(f'Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+    print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
  
 if __name__ == "__main__":
     my_scheduler = sched.scheduler(time.time, time.sleep)
