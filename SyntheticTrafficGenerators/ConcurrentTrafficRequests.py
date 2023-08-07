@@ -16,4 +16,4 @@ for i in range(concurr_reqs):
 
 for proc in procs:
     proc.wait()
-    time.delay(in_between_secs)
+    time.sleep(in_between_secs)
