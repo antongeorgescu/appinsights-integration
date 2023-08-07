@@ -26,6 +26,7 @@ def poll_url(scheduler):
     request_url = f"{url_archworksportal}/auto-synth-traffic/{log_count}" 
     webUrl = urlopen(request_url)
     print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+    time.delay(0.005)
 
     # Test URL https://<base_url_loggerapi>/ilogger/logfilecontent/<logfile_name>  
     curr_date = datetime.datetime.now().strftime("%Y%m%d")
@@ -34,6 +35,7 @@ def poll_url(scheduler):
     request_url = f"{url_loggerapi}/ilogger/logfilecontent/{filename}" 
     webUrl = urlopen(request_url)
     print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+    time.delay(0.005)
  
     # Test database performance with URL https://<base_url_archworkportal>/portalutilities/pubs/db  
     curr_date = datetime.datetime.now().strftime("%Y%m%d")
@@ -42,6 +44,7 @@ def poll_url(scheduler):
     request_url = f"{url_archworksportal}/portalutilities/pubs/db" 
     webUrl = urlopen(request_url)
     print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+    time.delay(0.005)
 
     # Create database traffic with URL https://<base_url_archworkportal>/pubs/namecontains/{author_contains}}/titlecontains/{title_contains}  
     curr_date = datetime.datetime.now().strftime("%Y%m%d")
@@ -51,6 +54,7 @@ def poll_url(scheduler):
     request_url = f"{url_archworksportal}/pubs/namecontains/{name_contain_list[list_index]}/titlecontains/%5E=%5E"
     webUrl = urlopen(request_url)
     print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+    time.delay(0.005)
 
 if __name__ == "__main__":
     my_scheduler = sched.scheduler(time.time, time.sleep)
