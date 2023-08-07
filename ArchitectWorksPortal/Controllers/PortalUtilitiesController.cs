@@ -99,6 +99,14 @@ namespace AngularSpaWebApi.Controllers
             return Ok(new { status = "Good", datetime = DateTime.Now.ToString() });
         }
 
+        [HttpGet("health")]
+        public IActionResult GetHealthStatus()
+        {
+            // returns the status of service
+            return Ok($"PortalUtilities running at {DateTime.Now}");
+
+        }
+
         // POST api/<PortalUtilitiesController>
         [HttpPost]
         public void Post([FromBody] string value)
