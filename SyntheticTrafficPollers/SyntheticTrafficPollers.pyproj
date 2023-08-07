@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>62dea995-b6ed-4bf3-bace-8a30ca6273b8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>SyntheticTrafficPollers.py</StartupFile>
+    <StartupFile>SyntheticTrafficPoller.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SyntheticTrafficPollers.py" />
+    <Compile Include="SyntheticTrafficPoller.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
