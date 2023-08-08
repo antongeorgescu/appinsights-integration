@@ -6,6 +6,7 @@ import ssl
 import sched, time
 import datetime
 import random
+import sys
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -18,10 +19,12 @@ url_ui = ["https://architectworksportal20221125195927.azurewebsites.net",
 
 name_contain_list = ["ee","sb","mo","ea","ar","ylv","al","te","gh","ur"]
 
+session_burst_freq = int(sys.argv[1])
+
 def poll_url(scheduler):
    
     # schedule the next call first
-    scheduler.enter(60, 1, poll_url, (scheduler,))
+    scheduler.enter(session_burst_freq, 1, poll_url, (scheduler,))
 
     # Test randomly the UI selects 
     list_index = random.randrange(1,len(url_ui))
