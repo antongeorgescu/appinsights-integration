@@ -12,12 +12,24 @@ ssl._create_default_https_context = ssl._create_unverified_context
 url_archworksportal = "https://architectworksportal20221125195927.azurewebsites.net"
 url_loggerapi =  "https://loggerapidemo20221127093952.azurewebsites.net"
 
+url_ui = ["https://architectworksportal20221125195927.azurewebsites.net",
+          "https://architectworksportal20221125195927.azurewebsites.net/pubs",
+          "https://architectworksportal20221125195927.azurewebsites.net/logger-to-apm"]
+
 name_contain_list = ["ee","sb","mo","ea","ar","ylv","al","te","gh","ur"]
 
 def poll_url(scheduler):
    
     # schedule the next call first
     scheduler.enter(60, 1, poll_url, (scheduler,))
+
+    # Test randomly the UI selects 
+    list_index = random.randrange(1,len(url_ui))
+    curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    request_url = url_ui[list_index-1] 
+    webUrl = urlopen(request_url)
+    print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+    time.sleep(0.005)
 
     # Test URL https://<base_url_archworkportal>/auto-synth-traffic/<logs_count>  
     # get random number of logs
