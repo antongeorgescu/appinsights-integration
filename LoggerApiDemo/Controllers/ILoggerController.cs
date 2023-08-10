@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -13,7 +14,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using static System.Net.Mime.MediaTypeNames;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -26,11 +33,15 @@ namespace LoggerApiDemo.Controllers
     {
         protected readonly ILogger<ILoggerController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly string _site24x7Uri;
+        private string _jsonObject;
 
         public ILoggerController([NotNull] ILogger<ILoggerController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
+            _site24x7Uri = @"https://logc.site24x7.com/event/receiver?token=ODgyMDk3ZjVjODU4YTQxZmMzYjc0YzFjOTc5ZDU3NzUvc3R1ZGVudGxlbmRpbmdwb2Nsb2d0eXBl";
+            _jsonObject = "{\"_zl_timestamp\": 1691589174750,\"loglevel\": \"WARN\",\"message\": \"*EVENTorID* Hosting environment down: Development\"}";
         }
 
         [HttpGet]
@@ -71,7 +82,7 @@ namespace LoggerApiDemo.Controllers
         }
 
         [HttpPost("log/debug")]
-        public IActionResult PostDebug([FromBody] LoggerEntry entry)
+        public async Task<IActionResult> PostDebug([FromBody] LoggerEntry entry)
         {
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
@@ -79,11 +90,12 @@ namespace LoggerApiDemo.Controllers
             _logger.LogDebug(eventId: new EventId(0, entry.HashKey),
                                 message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
+
             return Ok($"DEBUG log saved on {DateTime.Now}");
         }
 
         [HttpPost("log/warn")]
-        public IActionResult PostWarn([FromBody] LoggerEntry entry)
+        public async Task<IActionResult> PostWarn([FromBody] LoggerEntry entry)
         {
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
@@ -91,21 +103,76 @@ namespace LoggerApiDemo.Controllers
             _logger.LogWarning(eventId: new EventId(0, entry.HashKey),
                                 message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
+
             return Ok($"WARN log saved on {DateTime.Now}");
         }
 
+        //[HttpPost("log/error")]
+        //public async Task<IActionResult> PostError([FromBody] LoggerEntry entry)
+        //{
+        //    if (string.IsNullOrEmpty(entry.Message))
+        //        return BadRequest();
+
+
+        //    _logger.LogError(eventId: new EventId(0, entry.HashKey),
+        //                        exception: new Exception($"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
+        //                        message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
+        //                        "POST");
+        //    try
+        //    {
+        //        // log the message into Site24x7 Logger API
+        //        using (HttpClient client = new HttpClient())
+        //        {
+        //            // test Json body
+        //            var result = await client.PostAsJsonAsync(_site24x7Uri, _jsonObject);
+        //            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+        //                return BadRequest(result.ReasonPhrase);
+        //        }
+
+        //        return Ok($"ERROR log saved on {DateTime.Now}");
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
         [HttpPost("log/error")]
-        public IActionResult PostError([FromBody] LoggerEntry entry)
+        public async Task<IActionResult> PostError([FromBody] LoggerEntry entry)
         {
             if (string.IsNullOrEmpty(entry.Message))
                 return BadRequest();
+
 
             _logger.LogError(eventId: new EventId(0, entry.HashKey),
                                 exception: new Exception($"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
                                 message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
                                 "POST");
+            try
+            {
+                // call Site24x7 Logger service to log exceptions
+                using HttpClient client = new();
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/text"));
 
-            return Ok($"ERROR log saved on {DateTime.Now}");
+
+                var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+                _jsonObject = "{\"_zl_timestamp\":" + Timestamp.ToString() + 
+                    ",\"loglevel\": \"ERROR\"," + 
+                    "\"message\":" + $"\"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}\"";
+                var _content = new StringContent(_jsonObject);
+                
+                using HttpResponseMessage response0 = await client.PostAsync(_site24x7Uri, _content);
+                if (!response0.StatusCode.Equals(HttpStatusCode.OK))
+                    return BadRequest(response0.Content.ReadAsStringAsync().Result);
+
+                return Ok($"ERROR log saved on {DateTime.Now}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("appinsights/error")]

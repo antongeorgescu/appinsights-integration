@@ -166,7 +166,7 @@ namespace AngularSpaWebApi.Controllers
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/text"));
-            client.DefaultRequestHeaders.Add("User-Agent","Synthetic Exception Generusing HttpResponseMessage response = await client.PostAsync($\"{_loggerURI}/log/error\",content);\r\n                if (!response.StatusCode.Equals(HttpStatusCode.OK))\r\n                    return BadRequest(response.Content.ReadAsStringAsync().Result);ator");
+            client.DefaultRequestHeaders.Add("User-Agent", "Synthetic Exception Generator");
 
             using HttpResponseMessage response0 = await client.GetAsync($"{_loggerURI}/apmactive/{appname}");
             if (!response0.StatusCode.Equals(HttpStatusCode.OK))
