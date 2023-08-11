@@ -133,8 +133,8 @@ namespace LoggerApiDemo.Controllers
                 var logObj = new
                 {
                     _zl_timestamp = logTimestamp,
-                    logLevel = "ERROR",
-                    message = $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
+                    LogLevel = "ERROR",
+                    Message = $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
                 };
 
                 _jsonObject = JsonSerializer.Serialize(logObj);
