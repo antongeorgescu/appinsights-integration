@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Policy;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
 using static System.Net.Mime.MediaTypeNames;
@@ -107,36 +108,6 @@ namespace LoggerApiDemo.Controllers
             return Ok($"WARN log saved on {DateTime.Now}");
         }
 
-        //[HttpPost("log/error")]
-        //public async Task<IActionResult> PostError([FromBody] LoggerEntry entry)
-        //{
-        //    if (string.IsNullOrEmpty(entry.Message))
-        //        return BadRequest();
-
-
-        //    _logger.LogError(eventId: new EventId(0, entry.HashKey),
-        //                        exception: new Exception($"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"),
-        //                        message: $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}",
-        //                        "POST");
-        //    try
-        //    {
-        //        // log the message into Site24x7 Logger API
-        //        using (HttpClient client = new HttpClient())
-        //        {
-        //            // test Json body
-        //            var result = await client.PostAsJsonAsync(_site24x7Uri, _jsonObject);
-        //            if (result.StatusCode != System.Net.HttpStatusCode.OK)
-        //                return BadRequest(result.ReasonPhrase);
-        //        }
-
-        //        return Ok($"ERROR log saved on {DateTime.Now}");
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
         [HttpPost("log/error")]
         public async Task<IActionResult> PostError([FromBody] LoggerEntry entry)
         {
@@ -154,13 +125,20 @@ namespace LoggerApiDemo.Controllers
                 using HttpClient client = new();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/text"));
+                    new MediaTypeWithQualityHeaderValue("application/json"));
 
 
-                var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-                _jsonObject = "{\"_zl_timestamp\":" + Timestamp.ToString() + 
-                    ",\"loglevel\": \"ERROR\"," + 
-                    "\"message\":" + $"\"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}\"";
+                var logTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+
+                var logObj = new
+                {
+                    _zl_timestamp = logTimestamp,
+                    logLevel = "ERROR",
+                    message = $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
+                };
+
+                _jsonObject = JsonSerializer.Serialize(logObj);
+
                 var _content = new StringContent(_jsonObject);
                 
                 using HttpResponseMessage response0 = await client.PostAsync(_site24x7Uri, _content);
