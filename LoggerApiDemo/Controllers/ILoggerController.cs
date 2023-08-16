@@ -133,14 +133,15 @@ namespace LoggerApiDemo.Controllers
                 var logObj = new
                 {
                     _zl_timestamp = logTimestamp,
-                    LogLevel = "ERROR",
-                    Message = $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
+                    loglevel = "ERROR",
+                    message = $"SOURCE*NetCoreILogger*ID*{entry.HashKey}*CLASS*{entry.Class}*MESSAGE*{entry.Message}"
                 };
 
                 _jsonObject = JsonSerializer.Serialize(logObj);
 
                 var _content = new StringContent(_jsonObject);
-                
+                _content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
                 using HttpResponseMessage response0 = await client.PostAsync(_site24x7Uri, _content);
                 if (!response0.StatusCode.Equals(HttpStatusCode.OK))
                     return BadRequest(response0.Content.ReadAsStringAsync().Result);
