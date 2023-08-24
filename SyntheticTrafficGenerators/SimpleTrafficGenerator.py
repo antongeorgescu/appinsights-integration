@@ -7,19 +7,41 @@ import sched, time
 import datetime
 import random
 import sys
+import argparse
+
+sys.tracebacklimit = 0
+
+parser=argparse.ArgumentParser()
+
+parser.add_argument("--frequency", help="Tests session bursts in seconds")
+parser.add_argument("--environment", help="'azure' for AppServices; 'local' for IIS Website hosted locally")
+
+args=parser.parse_args()
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-url_archworksportal = "https://architectworksportal20221125195927.azurewebsites.net"
-url_loggerapi =  "https://loggerapidemo20221127093952.azurewebsites.net"
-
-url_ui = ["https://architectworksportal20221125195927.azurewebsites.net",
-          "https://architectworksportal20221125195927.azurewebsites.net/pubs",
-          "https://architectworksportal20221125195927.azurewebsites.net/logger-to-apm"]
+ENV = args.environment
+if (ENV == "azure"):
+    print("Run on Azure app services")
+    url_archworksportal = "https://architectworksportal20221125195927.azurewebsites.net"
+    url_loggerapi =  "https://loggerapidemo20221127093952.azurewebsites.net"
+    url_ui = ["https://architectworksportal20221125195927.azurewebsites.net",
+              "https://architectworksportal20221125195927.azurewebsites.net/pubs",
+              "https://architectworksportal20221125195927.azurewebsites.net/logger-to-apm"]
+elif (ENV == "local"):
+    print("Run on local IIS websites")
+    url_archworksportal = "http://STDLJHXX0T3.finastra.global"
+    url_loggerapi =  "http://STDLJHXX0T3.finastra.global/loggerapi"
+    url_ui = ["http://STDLJHXX0T3.finastra.global",
+              "http://STDLJHXX0T3.finastra.global/pubs",
+              "http://STDLJHXX0T3.finastra.global/logger-to-apm",
+              "http://stdljhxx0t3.finastra.global/loggerapi/ilogger/logfiles",
+              "http://stdljhxx0t3.finastra.global/loggerapi/ilogger/health"]
 
 name_contain_list = ["ee","sb","mo","ea","ar","ylv","al","te","gh","ur"]
 
-session_burst_freq = int(sys.argv[1])
+# frequency of call burst within 60 secs interval -- in seconds
+session_burst_freq = int(args.frequency)
 
 def poll_url(scheduler):
    
@@ -71,13 +93,25 @@ def poll_url(scheduler):
         webUrl = urlopen(request_url)
         print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
         time.sleep(0.005)
+
+        # Test randomly the UI selects 
+        list_index = random.randrange(1,len(url_ui))
+        curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        request_url = url_ui[list_index-1] 
+        webUrl = urlopen(request_url)
+        print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+        time.sleep(0.005)
+
     except Exception as X:
         print(X)
 
 if __name__ == "__main__":
     try:
+        
+        curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        print(f"[{curr_date_time}] Program started.")
         my_scheduler = sched.scheduler(time.time, time.sleep)
-        my_scheduler.enter(60, 1, poll_url, (my_scheduler,))
+        my_scheduler.enter(2, 1, poll_url, (my_scheduler,))
         my_scheduler.run()
     except Exception as X:
         print(X)

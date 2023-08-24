@@ -15,7 +15,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
     <PackageReference Include="Site24x7.DotNetCoreAgent" Version="6.2.3" />
-    <PackageReference Include="Site24x7.DotNetCoreAgent.Api" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>

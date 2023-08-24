@@ -1,0 +1,36 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+        cors:
+          allowed_origins:
+            - http://*
+            - https://*
+
+exporters:
+  # zipkin:
+  #   endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
+  # prometheus:
+  #   endpoint: "0.0.0.0:9464"
+  site24x7:
+   apikey: 882097f5c858a41fc3b74c1c979d5775
+
+processors:
+  batch:
+
+service:
+  telemetry:
+    logs:
+      level: "debug"
+  pipelines:
+    traces:
+      receivers: [otlp]
+      # exporters: [zipkin]
+      exporters: [site24x7]
+      processors: [batch]
+    metrics:
+      receivers: [otlp]
+      # exporters: [prometheus]
+      exporters: [site24x7]
+      processors: [batch]

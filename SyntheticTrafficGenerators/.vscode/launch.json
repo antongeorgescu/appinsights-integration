@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File with my args",
+            "name": "Python: Current File with args [frequency,concurrent,indelay]",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -13,6 +13,17 @@
                 "--frequency", "60",
                 "--concurrent", "20",
                 "--indelay", "100"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current File with args [frequency,environment]",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "local"
             ],
             "console": "integratedTerminal"
         }
