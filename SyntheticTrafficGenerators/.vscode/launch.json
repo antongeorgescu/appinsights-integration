@@ -17,13 +17,24 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Current File with args [frequency,environment]",
+            "name": "Python: Local APM tests [frequency,environment]",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "--frequency", "10",
                 "--environment", "local"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Azure APM tests [frequency,environment]",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "azure"
             ],
             "console": "integratedTerminal"
         }

@@ -5,63 +5,20 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
-    <SpaProxyServerUrl>https://localhost:44451</SpaProxyServerUrl>
+    <SpaProxyServerUrl>http://localhost:44408</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>e1135b14-520b-4a40-9c73-aed72281e7c6</UserSecretsId>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
-    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.21.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.9" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.10" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0-preview2.22314.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.19" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
-    <Compile Remove="DotNetAgent\**" />
     <Content Remove="$(SpaRoot)**" />
-    <Content Remove="DotNetAgent\**" />
-    <EmbeddedResource Remove="DotNetAgent\**" />
     <None Remove="$(SpaRoot)**" />
-    <None Remove="DotNetAgent\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="DAL\SynthDataInitializer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="C:\Users\ag4488\.nuget\packages\site24x7.dotnetcoreagent\6.2.3\contentFiles\any\netstandard2.0\DotNetAgent\apminsight.conf" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ClientApp\src\proxy.conf.json" />
-    <None Remove="Data\messages.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\messages.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Data\works.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
@@ -76,7 +33,7 @@
   
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install --legacy-peer-deps" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --configuration production" />
 
     <!-- Include the newly-built files in the publish output -->

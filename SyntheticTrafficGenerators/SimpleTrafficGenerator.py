@@ -27,7 +27,9 @@ if (ENV == "azure"):
     url_loggerapi =  "https://loggerapidemo20221127093952.azurewebsites.net"
     url_ui = ["https://architectworksportal20221125195927.azurewebsites.net",
               "https://architectworksportal20221125195927.azurewebsites.net/pubs",
-              "https://architectworksportal20221125195927.azurewebsites.net/logger-to-apm"]
+              "https://architectworksportal20221125195927.azurewebsites.net/logger-to-apm",
+              "https://loggerapidemo20221127093952.azurewebsites.net/ilogger/logfiles",
+              "https://loggerapidemo20221127093952.azurewebsites.net/ilogger/health"]
 elif (ENV == "local"):
     print("Run on local IIS websites")
     url_archworksportal = "http://STDLJHXX0T3.finastra.global"
@@ -103,7 +105,8 @@ def poll_url(scheduler):
         time.sleep(0.005)
 
     except Exception as X:
-        print(X)
+        curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        print(f"[{curr_date_time}] Response {X.status} ({X.msg}) on request {X.url}")
 
 if __name__ == "__main__":
     try:

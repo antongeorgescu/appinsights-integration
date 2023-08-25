@@ -6,6 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DotNetAgent\**" />
+    <Content Remove="DotNetAgent\**" />
+    <EmbeddedResource Remove="DotNetAgent\**" />
+    <None Remove="DotNetAgent\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\ag4488\.nuget\packages\site24x7.dotnetcoreagent\6.2.3\contentFiles\any\netstandard2.0\DotNetAgent\apminsight.conf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
@@ -14,7 +25,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
-    <PackageReference Include="Site24x7.DotNetCoreAgent" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,15 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="C:\Users\ag4488\.nuget\packages\site24x7.dotnetcoreagent\6.2.3\contentFiles\any\netstandard2.0\DotNetAgent\apminsight.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="DotNetAgent\AgentLogs\DotNetAgentManaged.LoggerApiDemo.LoggerApiDemo.17980-28-07-2023.log">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="logs\2022-11-03_logfile.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

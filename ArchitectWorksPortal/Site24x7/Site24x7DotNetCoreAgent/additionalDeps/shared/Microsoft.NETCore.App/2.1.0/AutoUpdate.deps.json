@@ -1,0 +1,22 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "AutoUpdate/1.0.0": {
+        "runtime": {
+          "lib/netcoreapp2.0/AutoUpdate.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AutoUpdate/1.0.0": {
+      "type": "package",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

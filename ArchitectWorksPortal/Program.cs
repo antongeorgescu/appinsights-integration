@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Web.Http;
 using ArchitectWorksPortal.UtilityClasses;
-using Site24x7.Agent;
+//using Site24x7.Agent;
 
 var AllowSpecificOrigins = "_myAllowSpecificOrigins";
 var AllowAnyOrigin = "_myAllowAnyOrigin";
@@ -34,7 +34,7 @@ builder.Services.AddScoped<IPortalRepository, PortalRepository>();
 builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
 builder.Services.AddScoped<AppInsightHandleExceptionAttribute>();
 builder.Services.AddScoped<AppDynamicsHandleExceptionAttribute>();
-builder.Services.AddSite24x7ApmInsights();
+//builder.Services.AddSite24x7ApmInsights();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen(c =>
 //{

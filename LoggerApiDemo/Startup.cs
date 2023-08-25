@@ -48,7 +48,7 @@ namespace LoggerApiDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureLoggerService();
-            services.AddSite24x7ApmInsights();
+            //services.AddSite24x7ApmInsights();
             services.AddControllers();
 
         }
