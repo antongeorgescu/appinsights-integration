@@ -28,13 +28,24 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: AppServices tests [frequency,environment]",
+            "name": "Python: AppServices with Nuget tests [frequency,environment]",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "--frequency", "10",
-                "--environment", "appservices"
+                "--environment", "appservices_nuget"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: AppServices with Extension tests [frequency,environment]",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "appservices_ext"
             ],
             "console": "integratedTerminal"
         },

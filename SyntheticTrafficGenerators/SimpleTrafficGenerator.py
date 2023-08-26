@@ -22,36 +22,37 @@ args=parser.parse_args()
 ssl._create_default_https_context = ssl._create_unverified_context
 
 ENV = args.environment
-if (ENV == "appservices"):
+if (ENV == "appservices_nuget"):
     print("Run on Azure app services")
-    url_loggerapi =  "https://loggerapidemo20221127093952.azurewebsites.net"
-    url_ui = ["https://architectworksportal20221125195927.azurewebsites.net",
-              "https://architectworksportal20221125195927.azurewebsites.net/pubs",
-              "https://architectworksportal20221125195927.azurewebsites.net/logger-to-apm",
-              "https://loggerapidemo20221127093952.azurewebsites.net/ilogger/logfiles",
-              "https://loggerapidemo20221127093952.azurewebsites.net/ilogger/health"]
+    URL_AWPORTAL = "https://architectworksportal20221125195927.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): ArchitectWorksPortal20221125195927
+    URL_LOGGERAPI =  "https://loggerapidemo20221127093952.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): LoggerApiDemo20221127093952
+    URL_APMINSIGHTS =  None
+elif (ENV == "appservices_ext"):
+    print("Run on Azure app services")
+    URL_AWPORTAL = "https://architectworksportal20221125195927.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): ArchitectWorksPortal20221125195927
+    URL_LOGGERAPI =  "https://loggerapidemo20221127093952.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): LoggerApiDemo20221127093952
+    URL_APMINSIGHTS =  "https://xsite24x7netcoreinsights20230826121210.azurewebsites.net"  # <apminsights agent with Azure extension - NOT WORKING>
 elif (ENV == "local"):
     print("Run on local IIS websites")
-    url_archworksportal = "http://STDLJHXX0T3.finastra.global"
-    url_loggerapi =  "http://STDLJHXX0T3.finastra.global/loggerapi"
-    url_ui = ["http://STDLJHXX0T3.finastra.global",
-              "http://STDLJHXX0T3.finastra.global/pubs",
-              "http://STDLJHXX0T3.finastra.global/logger-to-apm",
-              "http://stdljhxx0t3.finastra.global/loggerapi/ilogger/logfiles",
-              "http://stdljhxx0t3.finastra.global/loggerapi/ilogger/health"]
-    url_apminsights = ["http://STDLJHXX0T3.finastra.global/site24x7apminsights/health",
-              "http://STDLJHXX0T3.finastra.global/site24x7apminsights/health/pubs/byauthor?likestr=ee",
-              "http://STDLJHXX0T3.finastra.global/site24x7apminsights/health/pubs/bytitle?likestr=Ex",
-              "http://STDLJHXX0T3.finastra.global/site24x7apminsights/health/dbschema"]
+    URL_AWPORTAL = "http://STDLJHXX0T3.finastra.global"     # <apminsights agent with with ClrProfiler - NOT WORKING>
+    URL_LOGGERAPI =  "http://STDLJHXX0T3.finastra.global/loggerapi"  # <apminsights agent with ClrProfiler - NOT WORKING>
+    URL_APMINSIGHTS =  "http://STDLJHXX0T3.finastra.global/site24x7apminsights"     # APMInsights .NET Core Agent (NUGET): ArwopoNugetAgent
 elif (ENV == "debug"):
     print("Run on local IIS websites")
-    url_archworksportal = "https://localhost:44451"
-    url_loggerapi =  "http://localhost:5001/ilogger"
-    url_ui = ["https://localhost:44451",
-              "https://localhost:44451/pubs",
-              "https://localhost:44451/logger-to-apm",
-              "http://localhost:5001/ilogger/logfiles",
-              "http://localhost:5001/ilogger/health"]
+    URL_AWPORTAL = "https://localhost:44451"  # <apminsights agent with with ClrProfiler - NOT WORKING>
+    URL_LOGGERAPI =  "http://localhost:5001/ilogger"  # <apminsights agent with ClrProfiler - NOT WORKING>
+    URL_APMINSIGHTS =  "http://localhost:5097" # <apminsights agent with ClrProfiler - NOT WORKING>
+
+url_ui = [f'{URL_AWPORTAL}',
+            f'{URL_AWPORTAL}/pubs',
+            f'{URL_AWPORTAL}/logger-to-apm',
+            f'{URL_LOGGERAPI}/ilogger/logfiles',
+            f'{URL_LOGGERAPI}/ilogger/health']
+if URL_APMINSIGHTS is not None:
+    url_apminsights = [f'{URL_APMINSIGHTS}/health',
+                f'{URL_APMINSIGHTS}/health/pubs/byauthor?likestr=ee',
+                f'{URL_APMINSIGHTS}/health/pubs/bytitle?likestr=Ex',
+                f'{URL_APMINSIGHTS}/health/dbschema']
 
 name_contain_list = ["ee","sb","mo","ea","ar","ylv","al","te","gh","ur"]
 
@@ -68,8 +69,8 @@ def poll_url(scheduler):
         # schedule the next call first
         scheduler.enter(session_burst_freq, 1, poll_url, (scheduler,))
 
-        # if env in [azurevm, local] test Site24x7APMInsights agent
-        if (ENV in ['local','azurevm']):
+        # Test apm insights
+        if URL_APMINSIGHTS is not None:
             try:
                 list_index = random.randrange(1,len(url_apminsights))
                 curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -104,7 +105,7 @@ def poll_url(scheduler):
             # get random number of logs
             log_count = random.randrange(21,40)
             curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            request_url = f"{url_archworksportal}/auto-synth-traffic/{log_count}" 
+            request_url = f"{URL_AWPORTAL}/auto-synth-traffic/{log_count}" 
             webUrl = urlopen(request_url,context=ctx)
             print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
         except Exception as X:
@@ -120,7 +121,7 @@ def poll_url(scheduler):
             curr_date = datetime.datetime.now().strftime("%Y%m%d")
             filename = f'log_{curr_date}.log'
             curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            request_url = f"{url_loggerapi}/ilogger/logfilecontent/{filename}" 
+            request_url = f"{URL_LOGGERAPI}/ilogger/logfilecontent/{filename}" 
             webUrl = urlopen(request_url,context=ctx)
             print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
         except Exception as X:
@@ -136,7 +137,7 @@ def poll_url(scheduler):
             curr_date = datetime.datetime.now().strftime("%Y%m%d")
             filename = f'log_{curr_date}.log'
             curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            request_url = f"{url_archworksportal}/portalutilities/pubs/db" 
+            request_url = f"{URL_AWPORTAL}/portalutilities/pubs/db" 
             webUrl = urlopen(request_url,context=ctx)
             print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
         except Exception as X:
@@ -153,7 +154,7 @@ def poll_url(scheduler):
             filename = f'log_{curr_date}.log'
             curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             list_index = random.randrange(1,len(name_contain_list)) - 1
-            request_url = f"{url_archworksportal}/pubs/namecontains/{name_contain_list[list_index]}/titlecontains/%5E=%5E"
+            request_url = f"{URL_AWPORTAL}/pubs/namecontains/{name_contain_list[list_index]}/titlecontains/%5E=%5E"
             webUrl = urlopen(request_url,context=ctx)
             print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
         except Exception as X:

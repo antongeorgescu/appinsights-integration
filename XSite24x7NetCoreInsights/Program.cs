@@ -1,12 +1,11 @@
 using Dapper;
-using NetCoreApmInsights.Models;
 using System;
 using System.Data.SqlClient;
+using XNetCoreApmInsights.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSite24x7ApmInsights();
 
 var app = builder.Build();
 
@@ -64,7 +63,7 @@ app.MapGet("/health/pubs/byauthor", (string likestr, IConfiguration config) =>
         }
         return publications;
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
         return publications;
     }
@@ -102,6 +101,3 @@ app.MapGet("/health/pubs/bytitle", (string likestr, IConfiguration config) =>
 });
 
 app.Run();
-
-
-
