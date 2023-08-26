@@ -26,12 +26,12 @@ if (ENV == "appservices_nuget"):
     print("Run on Azure app services")
     URL_AWPORTAL = "https://architectworksportal20221125195927.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): ArchitectWorksPortal20221125195927
     URL_LOGGERAPI =  "https://loggerapidemo20221127093952.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): LoggerApiDemo20221127093952
-    URL_APMINSIGHTS =  None
+    URL_APMINSIGHTS = "https://site24x7netcoreinsights20230826164736.azurewebsites.net" # APMInsights .NET Core Agent (NUGET): Site24x7NetCoreInsights20230826164736
 elif (ENV == "appservices_ext"):
     print("Run on Azure app services")
     URL_AWPORTAL = "https://architectworksportal20221125195927.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): ArchitectWorksPortal20221125195927
     URL_LOGGERAPI =  "https://loggerapidemo20221127093952.azurewebsites.net"  # APMInsights .NET Core Agent (NUGET): LoggerApiDemo20221127093952
-    URL_APMINSIGHTS =  "https://xsite24x7netcoreinsights20230826121210.azurewebsites.net"  # <apminsights agent with Azure extension - NOT WORKING>
+    URL_APMINSIGHTS =  "https://xsite24x7netcoreinsights20230826121210.azurewebsites.net"  # APMInsights .NET Core Agent (EXTENSION):XSite24x7NetCoreInsights20230826121210
 elif (ENV == "local"):
     print("Run on local IIS websites")
     URL_AWPORTAL = "http://STDLJHXX0T3.finastra.global"     # <apminsights agent with with ClrProfiler - NOT WORKING>
@@ -48,11 +48,11 @@ url_ui = [f'{URL_AWPORTAL}',
             f'{URL_AWPORTAL}/logger-to-apm',
             f'{URL_LOGGERAPI}/ilogger/logfiles',
             f'{URL_LOGGERAPI}/ilogger/health']
-if URL_APMINSIGHTS is not None:
-    url_apminsights = [f'{URL_APMINSIGHTS}/health',
-                f'{URL_APMINSIGHTS}/health/pubs/byauthor?likestr=ee',
-                f'{URL_APMINSIGHTS}/health/pubs/bytitle?likestr=Ex',
-                f'{URL_APMINSIGHTS}/health/dbschema']
+
+url_apminsights = [f'{URL_APMINSIGHTS}/health',
+            f'{URL_APMINSIGHTS}/health/pubs/byauthor?likestr=ee',
+            f'{URL_APMINSIGHTS}/health/pubs/bytitle?likestr=Ex',
+            f'{URL_APMINSIGHTS}/health/dbschema']
 
 name_contain_list = ["ee","sb","mo","ea","ar","ylv","al","te","gh","ur"]
 
@@ -70,20 +70,19 @@ def poll_url(scheduler):
         scheduler.enter(session_burst_freq, 1, poll_url, (scheduler,))
 
         # Test apm insights
-        if URL_APMINSIGHTS is not None:
-            try:
-                list_index = random.randrange(1,len(url_apminsights))
-                curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-                request_url = url_apminsights[list_index-1] 
-                webUrl = urlopen(request_url,context=ctx)
-                print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
-            except Exception as X:
-                curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-                print(f'[{curr_date_time}] Error on request {request_url}')
-                exc_info = sys.exc_info()
-                print(f"{''.join(traceback.format_exception(*exc_info))}")   
+        try:
+            list_index = random.randrange(1,len(url_apminsights))
+            curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+            request_url = url_apminsights[list_index-1] 
+            webUrl = urlopen(request_url,context=ctx)
+            print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+        except Exception as X:
+            curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+            print(f'[{curr_date_time}] Error on request {request_url}')
+            exc_info = sys.exc_info()
+            print(f"{''.join(traceback.format_exception(*exc_info))}")   
 
-            time.sleep(0.005)
+        time.sleep(0.005)
 
         # Test randomly the UI selects 
         try:
