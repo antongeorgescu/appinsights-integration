@@ -17,7 +17,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Local APM tests [frequency,environment]",
+            "name": "Python: Local IIS tests [frequency,environment]",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -28,13 +28,24 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Azure APM tests [frequency,environment]",
+            "name": "Python: AppServices tests [frequency,environment]",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "--frequency", "10",
-                "--environment", "azure"
+                "--environment", "appservices"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Visual Studio tests [frequency,environment]",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "debug"
             ],
             "console": "integratedTerminal"
         }

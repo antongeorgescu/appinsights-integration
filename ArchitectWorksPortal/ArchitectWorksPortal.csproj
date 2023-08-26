@@ -28,11 +28,15 @@
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="DotNetAgent\**" />
+    <Compile Remove="Site24x7\**" />
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="DotNetAgent\**" />
+    <Content Remove="Site24x7\**" />
     <EmbeddedResource Remove="DotNetAgent\**" />
+    <EmbeddedResource Remove="Site24x7\**" />
     <None Remove="$(SpaRoot)**" />
     <None Remove="DotNetAgent\**" />
+    <None Remove="Site24x7\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
