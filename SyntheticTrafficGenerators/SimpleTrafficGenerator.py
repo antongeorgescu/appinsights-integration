@@ -34,14 +34,14 @@ elif (ENV == "appservices_ext"):
     URL_APMINSIGHTS =  "https://xsite24x7netcoreinsights20230826121210.azurewebsites.net"  # APMInsights .NET Core Agent (EXTENSION):XSite24x7NetCoreInsights20230826121210
 elif (ENV == "local"):
     print("Run on local IIS websites")
-    URL_AWPORTAL = "http://STDLJHXX0T3.finastra.global"     # <apminsights agent with with ClrProfiler - NOT WORKING>
-    URL_LOGGERAPI =  "http://STDLJHXX0T3.finastra.global/loggerapi"  # <apminsights agent with ClrProfiler - NOT WORKING>
+    URL_AWPORTAL = "http://STDLJHXX0T3.finastra.global"     # APMInsights .NET Core Agent (ClrProfiler): NOT WORKING
+    URL_LOGGERAPI =  "http://STDLJHXX0T3.finastra.global/loggerapi"  # # APMInsights .NET Core Agent (ClrProfiler): NOT WORKING
     URL_APMINSIGHTS =  "http://STDLJHXX0T3.finastra.global/site24x7apminsights"     # APMInsights .NET Core Agent (NUGET): ArwopoNugetAgent
 elif (ENV == "debug"):
     print("Run on local IIS websites")
-    URL_AWPORTAL = "https://localhost:44451"  # <apminsights agent with with ClrProfiler - NOT WORKING>
-    URL_LOGGERAPI =  "http://localhost:5001/ilogger"  # <apminsights agent with ClrProfiler - NOT WORKING>
-    URL_APMINSIGHTS =  "http://localhost:5097" # <apminsights agent with ClrProfiler - NOT WORKING>
+    URL_AWPORTAL = "https://localhost:44451"  
+    URL_LOGGERAPI =  "http://localhost:5001/ilogger"  
+    URL_APMINSIGHTS =  "http://localhost:5097" 
 
 url_ui = [f'{URL_AWPORTAL}',
             f'{URL_AWPORTAL}/pubs',
