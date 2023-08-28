@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File with args [frequency,concurrent,indelay]",
+            "name": "Python: Current File with args",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -17,7 +17,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Local IIS tests [frequency,environment]",
+            "name": "Python: Local IIS tests",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -28,7 +28,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: AppServices with Nuget tests [frequency,environment]",
+            "name": "Python: AppServices with Nuget",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -39,7 +39,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: AppServices with Extension tests [frequency,environment]",
+            "name": "Python: AppServices with Extension",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -50,13 +50,35 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Visual Studio tests [frequency,environment]",
+            "name": "Python: Visual Studio debugger",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "--frequency", "10",
                 "--environment", "debug"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: SLP CBS services",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "eptcbs"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: SLP API Gateway",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "eptagw"
             ],
             "console": "integratedTerminal"
         }

@@ -5,13 +5,16 @@
     <ProjectGuid>62dea995-b6ed-4bf3-bace-8a30ca6273b8</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>SimpleTrafficGenerator.py</StartupFile>
+    <StartupFile>SlpServiceHealthTraffic.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>SyntheticTrafficGenerator</Name>
     <RootNamespace>SyntheticTrafficPollers</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments>--frequency 10 --environment eptcbs</CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +26,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ConcurrentTrafficRequests.py" />
+    <Compile Include="LoremTesterSite24x7AppLogs.py" />
+    <Compile Include="NamedCommandArguments.py" />
     <Compile Include="SimpleTrafficGenerator.py" />
+    <Compile Include="SlpServiceHealthTraffic.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
