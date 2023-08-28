@@ -1,7 +1,6 @@
 using Dapper;
 using NetCoreApmInsights.Models;
-using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +18,6 @@ app.MapGet("/health", () =>
 
 app.MapGet("/health/dbschema", (IConfiguration config) =>
 {
-    // database query pointer for Site24x7 Nert Core APMInsights agent 
-    var sqlpointer = "SELECT schema_name(t.schema_id) as schemaname,t.name,t.create_date,t.modify_date FROM sys.tables t";
-
     List<SchemaInfo> dbdatetimeinfo = null;
     var connectionString = config.GetConnectionString("ArchitectWorksDbConnection");
     // Connect to the database 
@@ -41,10 +37,6 @@ app.MapGet("/health/dbschema", (IConfiguration config) =>
 
 app.MapGet("/health/pubs/byauthor", (string likestr, IConfiguration config) =>
 {
-    // database query pointer for Site24x7 Nert Core APMInsights agent 
-    var sqlpointer0 = "SELECT au.au_id,au.au_fname,au.au_lname,au.city,au.state FROM[ArchitectWorks].[dbo].[authors] au";
-    var sqlpointer1 = "SELECT ti.title,ti.type FROM[ArchitectWorks].[dbo].[titles] ti";
-
     List<Publication> publications = new List<Publication>();
     try
     {
