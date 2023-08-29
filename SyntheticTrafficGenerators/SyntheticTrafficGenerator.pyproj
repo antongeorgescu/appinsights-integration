@@ -13,7 +13,7 @@
     <Name>SyntheticTrafficGenerator</Name>
     <RootNamespace>SyntheticTrafficPollers</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--frequency 10 --environment eptcbs</CommandLineArguments>
+    <CommandLineArguments>--cbstype feature</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

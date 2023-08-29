@@ -61,26 +61,24 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: SLP CBS services",
+            "name": "Python: SLP CBS feature",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
-                "--frequency", "10",
-                "--environment", "eptcbs"
+                "--cbstype", "feature"
             ],
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: SLP API Gateway",
+            "name": "Python: SLP CBS worker",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
-                "--frequency", "10",
-                "--environment", "eptagw"
+                "--cbstype", "worker"
             ],
             "console": "integratedTerminal"
-        }
+        },
     ]
 }
