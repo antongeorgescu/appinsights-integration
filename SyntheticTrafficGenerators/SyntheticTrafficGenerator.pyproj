@@ -5,7 +5,7 @@
     <ProjectGuid>62dea995-b6ed-4bf3-bace-8a30ca6273b8</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>SlpServiceHealthTraffic.py</StartupFile>
+    <StartupFile>SimpleTrafficGenerator.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -13,7 +13,7 @@
     <Name>SyntheticTrafficGenerator</Name>
     <RootNamespace>SyntheticTrafficPollers</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--cbstype feature</CommandLineArguments>
+    <CommandLineArguments>--frequency 10 --environment local</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
