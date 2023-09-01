@@ -25,9 +25,11 @@ ENV = args.environment
 if (ENV == "debug"):
     print("Run in Debug mode")
     URL_BASE = "http://localhost:5066"
-elif (ENV == "prod"):
-    print("Run in Production mode")
-    URL_BASE = "http://STDLJHXX0T3.finastra.global/searchpublications"
+elif (ENV == "local"):
+    print("Run in local IIS")
+    URL_BASE = "http://STDLJHXX0T3.finastra.global"
+elif (ENV == "azurevm"):
+    URL_BASE = "http://architectworksportal.eastus.cloudapp.azure.com"
 
 
 url_ui = [f'{URL_BASE}/',
