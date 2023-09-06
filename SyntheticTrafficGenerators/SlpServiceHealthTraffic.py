@@ -16,6 +16,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 parser=argparse.ArgumentParser()
 
 parser.add_argument("--cbstype", help="Type of CBS API (eg feature, worker, etc.)")
+parser.add_argument("--uitype", help="Type of User Interface (eg student-hub, static site, etc.)")
 
 args=parser.parse_args()
 CBS_TYPE = args.cbstype
@@ -52,9 +53,11 @@ elif (CBS_TYPE == 'worker'):
     services = [
         {"service": "worker", "healthurl": "env"},
         {"service": "fda", "healthurl": "env"},
+        {"service": "fda", "healthurl": "health"},
         {"service": "messenger", "healthurl": "env"},
         {"service": "datahub", "healthurl": "env"},
     ]
+
 
 ctx = ssl.create_default_context()
 ctx.check_hostname = False

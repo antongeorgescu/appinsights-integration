@@ -1,0 +1,95 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Search pubs",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "debug"                
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current File with args",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "60",
+                "--concurrent", "20",
+                "--indelay", "100"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Local IIS tests",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "local"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: AppServices with Nuget",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "appservices_nuget"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: AppServices with Extension",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "appservices_ext"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Visual Studio debugger",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--frequency", "10",
+                "--environment", "debug"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: SLP CBS feature",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--cbstype", "feature"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: SLP CBS worker",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--cbstype", "worker"
+            ],
+            "console": "integratedTerminal"
+        },
+    ]
+}

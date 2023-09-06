@@ -1,0 +1,22 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Site24x7.Agent.Api/1.0.0": {
+        "runtime": {
+          "lib/netcoreapp2.0/Site24x7.Agent.Api.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Site24x7.Agent.Api/1.0.0": {
+      "type": "package",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
