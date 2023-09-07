@@ -1,0 +1,16 @@
+# connect to remote Sql Server db server located in devcorp.dh.com domain 
+runas /netonly /user:u704148@devcorp.dh.com "C:\Program Files (x86)\Microsoft SQL Server Management Studio 19\Common7\IDE\Ssms.exe"
+
+# run python scripts that connect to remote Sql Server db server located in devcorp.dh.com domain 
+runas /netonly /user:u704148@devcorp.dh.com "C:\Users\ag4488\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+
+# Windows Server 2019 Data Centre with Sql Server 2016
+VC01WSQLQA018.devservices.dh.com\INST01
+
+# Site24x7 monitors
+CORNERSTONE - Student Lending ePT
+VC01WSQLQA018-DB-SERVER
+VC01WSQLQA018-DB-SERVER-UPDATE
+VC01WSQLQA018-SQLDB
+
+

@@ -13,7 +13,7 @@
     <Name>SyntheticTrafficGenerator</Name>
     <RootNamespace>SyntheticTrafficPollers</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--cbstype worker</CommandLineArguments>
+    <CommandLineArguments>--testcount 12000</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -26,6 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ConcurrentTrafficRequests.py" />
+    <Compile Include="DatabaseTrafficGenerator.py" />
     <Compile Include="LoremTesterSite24x7AppLogs.py" />
     <Compile Include="NamedCommandArguments.py" />
     <Compile Include="SearchPublicationsTraffic.py" />
@@ -34,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
+    <Content Include="Instructions.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
