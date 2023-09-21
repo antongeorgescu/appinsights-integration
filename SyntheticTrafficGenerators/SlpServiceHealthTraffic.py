@@ -16,10 +16,12 @@ ssl._create_default_https_context = ssl._create_unverified_context
 parser=argparse.ArgumentParser()
 
 parser.add_argument("--cbstype", help="Type of CBS API (eg feature, worker, etc.)")
-parser.add_argument("--uitype", help="Type of User Interface (eg student-hub, static site, etc.)")
+parser.add_argument("--iterations", help="Number of request repeats)")
 
 args=parser.parse_args()
 CBS_TYPE = args.cbstype
+ITERS = int(args.iterations)
+
 
 if (CBS_TYPE == 'feature'):
     print("Run on ePT CBS feature services")
@@ -57,6 +59,12 @@ elif (CBS_TYPE == 'worker'):
         {"service": "messenger", "healthurl": "env"},
         {"service": "datahub", "healthurl": "env"},
     ]
+elif (CBS_TYPE == "apigateway"):
+    URL_BASE = "https://slapi-qa03.devservices.dh.com"
+    services = [
+        {"service": "", "healthurl": "env"},
+        {"service": "", "healthurl": "health"},
+    ]
 
 
 ctx = ssl.create_default_context()
@@ -64,18 +72,24 @@ ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
 if __name__ == "__main__":
-    # Test CBS health endpoints
-    for list_index in range(0,len(services)):
-        try:
-            curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            service_line = services[list_index]
-            request_url = f'{URL_BASE}/{service_line["service"]}/{service_line["healthurl"]}'
-            webUrl = urlopen(request_url,context=ctx)
-            print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
-        except Exception as X:
-            curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            print(f'[{curr_date_time}] Error on request {request_url}')
-            exc_info = sys.exc_info()
-            print(f"{''.join(traceback.format_exception(*exc_info))}")   
-        finally:
-            time.sleep(0.005)
+    for i in range(ITERS):
+        # Run the specified number of iterations
+        print(f'Iteration: {i}')
+        # Test CBS health endpoints
+        for list_index in range(0,len(services)):
+            try:
+                curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+                service_line = services[list_index]
+                if (service_line["service"] == ''):
+                    request_url = f'{URL_BASE}/{service_line["healthurl"]}'
+                else:
+                    request_url = f'{URL_BASE}/{service_line["service"]}/{service_line["healthurl"]}'
+                webUrl = urlopen(request_url,context=ctx)
+                print(f'[{curr_date_time}] Response {webUrl.getcode()} and content length {len(webUrl.read())} on request {request_url}')
+            except Exception as X:
+                curr_date_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+                print(f'[{curr_date_time}] Error on request {request_url}')
+                exc_info = sys.exc_info()
+                print(f"{''.join(traceback.format_exception(*exc_info))}")   
+            finally:
+                time.sleep(0.005)

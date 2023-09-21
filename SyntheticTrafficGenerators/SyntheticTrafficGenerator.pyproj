@@ -13,7 +13,7 @@
     <Name>SyntheticTrafficGenerator</Name>
     <RootNamespace>SyntheticTrafficPollers</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--testcount 12000</CommandLineArguments>
+    <CommandLineArguments>--cbstype apigateway --iterations 300</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

@@ -1,8 +1,14 @@
 # connect to remote Sql Server db server located in devcorp.dh.com domain 
 runas /netonly /user:u704148@devcorp.dh.com "C:\Program Files (x86)\Microsoft SQL Server Management Studio 19\Common7\IDE\Ssms.exe"
 
-# run python scripts that connect to remote Sql Server db server located in devcorp.dh.com domain 
+# run in VSCode python scripts that connect to remote Sql Server db server located in devcorp.dh.com domain 
 runas /netonly /user:u704148@devcorp.dh.com "C:\Users\ag4488\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+
+# run in CMD python scripts that connect to remote Sql Server db server located in devcorp.dh.com domain 
+# next line is used only for connecting to ePT environment
+runas /netonly /user:u704148@devcorp.dh.com "cmd.exe"
+cd "C:\Users\ag4488\OneDrive - Finastra\Visual Studio 2022\Projects\ApplicationInsights-integration\SyntheticTrafficGenerators"
+python DatabaseTrafficGenerator.py --testcount 12000 --dbserver ePT
 
 # Windows Server 2019 Data Centre with Sql Server 2016
 VC01WSQLQA018.devservices.dh.com\INST01
@@ -12,5 +18,19 @@ CORNERSTONE - Student Lending ePT
 VC01WSQLQA018-DB-SERVER
 VC01WSQLQA018-DB-SERVER-UPDATE
 VC01WSQLQA018-SQLDB
+
+IMPORTANT!!!
+If Sql Server Monitor does not collect data, use the following 2 links:
+https://support.site24x7.com/portal/en/kb/articles/no-data-received-from-the-sql-server
+https://techcommunity.microsoft.com/t5/sql-server-support-blog/sql-server-performance-counter-are-missing/ba-p/2228914
+https://blog.sqlauthority.com/2009/06/10/sql-server-performance-counters-from-system-views-by-kevin-mckenna/
+https://helpcenter.gsx.com/hc/en-us/articles/203874798-Repairing-Windows-Performance-counters-with-Lodctr
+https://support.site24x7.com/portal/en/kb/articles/security-for-sql-server-monitoring
+https://www.sqlservercentral.com/articles/perfmon-using-sql-server-performance-counters#:~:text=Performance%20Metrics%20in%20PerfMon%20are,collection%20to%20be%20analyzed%20later.
+
+List performance counters
+select * from sys.dm_os_performance_counters order by object_name
+
+
 
 
